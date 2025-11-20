@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <title>Agent_CLI</title>
+  <category>AGENT</category>
+  <description><![CDATA[Apply a Gaussian blur to an image]]></description>
+  <version>0.1.0.</version>
+  <contributor>Aleandre Buisson (UNC)</contributor>
+  <parameters>
+
+    <label>Inputs</label>
+    <description><![CDATA[Input/output parameters]]></description>
+
+    <string>
+      <name>prompt</name>
+      <label>prompt</label>
+      <index>0</index>
+      <description>What you want</description>
+      <default>I need nothing</default>
+    </string>
+
+    <string>
+      <name>inputfolder</name>
+      <label>Input Folder</label>
+      <index>1</index>
+    </string>
+
+    <string reference="inputVolume">
+      <name>outputfolder</name>
+      <label>Output Folder</label>
+      <index>2</index>
+    </string>
+
+  </parameters>
+</executable>

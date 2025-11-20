@@ -1,0 +1,13 @@
+# Agent LLM Router Requirements
+
+# YAML parsing for manifest
+pyyaml>=6.0
+
+# Ollama Python client (for LLM inference)
+ollama>=0.1.0
+
+# Optional: for advanced LLM usage
+# llama-cpp-python>=0.2.0
+
+# Optional: for enhanced CLI argument parsing
+# Click>=8.0
