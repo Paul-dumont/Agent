@@ -24,10 +24,16 @@
       <index>1</index>
     </string>
 
-    <string reference="inputVolume">
+    <string>
       <name>outputfolder</name>
       <label>Output Folder</label>
       <index>2</index>
+    </string>
+
+    <string>
+      <name>modeagent</name>
+      <label>ModeAgent</label>
+      <index>3</index>
     </string>
 
   </parameters>

@@ -13,7 +13,7 @@ from typing import Dict, List
 import statistics
 
 class PerformanceComparison:
-    def __init__(self, queries_file="benchmark_queries.json"):
+    def __init__(self, queries_file="just_cli/queries/benchmark_queries.json"):
         self.queries_file = queries_file
         self.results = {}
         
@@ -52,7 +52,7 @@ class PerformanceComparison:
             
             try:
                 result = subprocess.run(
-                    ["python", "router.py", query, "--benchmark", "--dry-run"],
+                    ["python", "just_cli/code/router.py", query, "--benchmark", "--dry-run"],
                     capture_output=True,
                     text=True,
                     timeout=120,
@@ -113,11 +113,7 @@ class PerformanceComparison:
         """Run predefined comparison suite."""
         
         configs = [
-            ("llama2-chinese", "ollama", "0.40", "llama2-chinese (13B, optimisé multilingue)"),
-            ("neural-chat:7b-v3.2", "ollama", "0.40", "neural-chat-7b-v3.2 (meilleure précision)"),
-            ("orca-mini", "ollama", "0.40", "orca-mini (3B, rapide et précis)"),
-            ("nous-hermes", "ollama", "0.40", "nous-hermes (34B, expert reasoning)"),
-            ("yi", "ollama", "0.40", "yi (34B, vision + texte)"),
+            ("gemma", "ollama", "0.40", "Gemma (7B, optimisé)")
         ]
         
         print("=" * 60)
@@ -202,7 +198,7 @@ class PerformanceComparison:
             print(f"  Mean:    {conf_stats['mean']:.3f}")
             print(f"  Median:  {conf_stats['median']:.3f}")
     
-    def save_results(self, filename="performance_comparison2.json") -> None:
+    def save_results(self, filename="just_cli/performance_comparison3.json") -> None:
         """Save comparison results to JSON."""
         
         output = {
@@ -221,7 +217,7 @@ if __name__ == "__main__":
     import sys
     
     # Allow custom queries file
-    queries_file = sys.argv[1] if len(sys.argv) > 1 else "benchmark_queries.json"
+    queries_file = sys.argv[1] if len(sys.argv) > 1 else "just_cli/queries/benchmark_queries.json"
     
     if not Path(queries_file).exists():
         print(f"Error: Queries file '{queries_file}' not found")

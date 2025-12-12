@@ -3,7 +3,7 @@ from pathlib import Path
 import logging
 
 # ----- CONFIG -----
-MODEL = os.environ.get("ROUTER_MODEL", "mistral:latest")  # e.g. "mistral", "tinyllama", "phi3"
+MODEL = os.environ.get("ROUTER_MODEL", "gemma:latest")  # e.g. "mistral", "tinyllama", "phi3"
 BACKEND = os.environ.get("ROUTER_BACKEND", "ollama")               # "ollama" or "llamacpp"
 CONF_THRESHOLD = float(os.environ.get("ROUTER_THRESHOLD", "0.40"))
 VERBOSE = "--verbose" in sys.argv[2:]
