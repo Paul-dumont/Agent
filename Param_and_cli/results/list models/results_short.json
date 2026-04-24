@@ -1,0 +1,2192 @@
+[
+  {
+    "model": "deepseek-r1:70b",
+    "timestamp": "2026-01-09 20:10:29",
+    "total_tests": 23,
+    "tool_selection_correct": 23,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 17,
+    "parameter_extraction_total": 23,
+    "combined_perfect": 17,
+    "avg_tool_selection_accuracy": 1.0,
+    "avg_parameter_accuracy": 0.922463768115942,
+    "avg_combined_accuracy": 0.922463768115942,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 57.50345182418823
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 47.52574849128723
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 51.48771786689758
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 72.76652002334595
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 55.585773944854736
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 38.35526418685913
+      },
+      {
+        "index": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 48.15544867515564
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 42.68385148048401
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 39.4239296913147
+      },
+      {
+        "index": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 62.22677493095398
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 39.015976428985596
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 34.29750180244446
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 43.00244092941284
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 41.0161292552948
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 49.2942430973053
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 46.63223648071289
+      },
+      {
+        "index": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 56.18495965003967
+      },
+      {
+        "index": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 50.33030104637146
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 57.97397041320801
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 46.17413306236267
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 65.43914699554443
+      },
+      {
+        "index": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 45.30489420890808
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 53.93092489242554
+      }
+    ],
+    "latencies": [
+      57.50345182418823,
+      47.52574849128723,
+      51.48771786689758,
+      72.76652002334595,
+      55.585773944854736,
+      38.35526418685913,
+      48.15544867515564,
+      42.68385148048401,
+      39.4239296913147,
+      62.22677493095398,
+      39.015976428985596,
+      34.29750180244446,
+      43.00244092941284,
+      41.0161292552948,
+      49.2942430973053,
+      46.63223648071289,
+      56.18495965003967,
+      50.33030104637146,
+      57.97397041320801,
+      46.17413306236267,
+      65.43914699554443,
+      45.30489420890808,
+      53.93092489242554
+    ],
+    "errors": [],
+    "latency_stats": {
+      "mean_s": 49.75266692949378,
+      "median_s": 48.15544867515564,
+      "min_s": 34.29750180244446,
+      "max_s": 72.76652002334595
+    }
+  },
+  {
+    "model": "gemma3:12b",
+    "timestamp": "2026-01-09 20:29:34",
+    "total_tests": 23,
+    "tool_selection_correct": 21,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 11,
+    "parameter_extraction_total": 21,
+    "combined_perfect": 11,
+    "avg_tool_selection_accuracy": 0.9130434782608695,
+    "avg_parameter_accuracy": 0.8282608695652174,
+    "avg_combined_accuracy": 0.8282608695652174,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 7.4697465896606445
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 3.4330620765686035
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 3.3314390182495117
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_ios",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 3.6445412635803223
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "flexreg",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 2.9957425594329834
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.1985578536987305
+      },
+      {
+        "index": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 4.054097652435303
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 3.4719066619873047
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.7449257373809814
+      },
+      {
+        "index": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 3.4422523975372314
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.939004421234131
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.6246285438537598
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.424964427947998
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.1431164741516113
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.208883047103882
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.6162827014923096
+      },
+      {
+        "index": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 3.4754977226257324
+      },
+      {
+        "index": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 3.923536539077759
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.7150440216064453
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.765770435333252
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 4.3252527713775635
+      },
+      {
+        "index": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 3.383338451385498
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 4.00774621963501
+      }
+    ],
+    "latencies": [
+      7.4697465896606445,
+      3.4330620765686035,
+      3.3314390182495117,
+      3.6445412635803223,
+      2.9957425594329834,
+      3.1985578536987305,
+      4.054097652435303,
+      3.4719066619873047,
+      2.7449257373809814,
+      3.4422523975372314,
+      2.939004421234131,
+      2.6246285438537598,
+      3.424964427947998,
+      3.1431164741516113,
+      3.208883047103882,
+      3.6162827014923096,
+      3.4754977226257324,
+      3.923536539077759,
+      3.7150440216064453,
+      3.765770435333252,
+      4.3252527713775635,
+      3.383338451385498,
+      4.00774621963501
+    ],
+    "errors": [],
+    "latency_stats": {
+      "mean_s": 3.6234494603198506,
+      "median_s": 3.4422523975372314,
+      "min_s": 2.6246285438537598,
+      "max_s": 7.4697465896606445
+    }
+  },
+  {
+    "model": "gpt-oss:120b",
+    "timestamp": "2026-01-09 20:30:57",
+    "total_tests": 23,
+    "tool_selection_correct": 21,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 17,
+    "parameter_extraction_total": 21,
+    "combined_perfect": 17,
+    "avg_tool_selection_accuracy": 0.9130434782608695,
+    "avg_parameter_accuracy": 0.8789855072463767,
+    "avg_combined_accuracy": 0.8789855072463767,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 52.4910352230072
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 38.124070167541504
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 41.23954963684082
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 41.43036413192749
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 37.16835570335388
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 39.54422640800476
+      },
+      {
+        "index": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 49.23078894615173
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 39.79554533958435
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 31.21377420425415
+      },
+      {
+        "index": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 46.95034408569336
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 29.799041986465454
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 25.836467504501343
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 37.3086793422699
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 32.06364417076111
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 43.39568781852722
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 35.005486488342285
+      },
+      {
+        "index": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 39.48611402511597
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 33.68111300468445
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 34.92461824417114
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 41.23765993118286
+      },
+      {
+        "index": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 38.58745241165161
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 49.58535647392273
+      }
+    ],
+    "latencies": [
+      52.4910352230072,
+      38.124070167541504,
+      41.23954963684082,
+      41.43036413192749,
+      37.16835570335388,
+      39.54422640800476,
+      49.23078894615173,
+      39.79554533958435,
+      31.21377420425415,
+      46.95034408569336,
+      29.799041986465454,
+      25.836467504501343,
+      37.3086793422699,
+      32.06364417076111,
+      43.39568781852722,
+      35.005486488342285,
+      39.48611402511597,
+      22.990390300750732,
+      33.68111300468445,
+      34.92461824417114,
+      41.23765993118286,
+      38.58745241165161,
+      49.58535647392273
+    ],
+    "errors": [
+      {
+        "test": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "error": "unsupported format string passed to NoneType.__format__"
+      }
+    ],
+    "latency_stats": {
+      "mean_s": 38.308250676030696,
+      "median_s": 38.58745241165161,
+      "min_s": 22.990390300750732,
+      "max_s": 52.4910352230072
+    }
+  },
+  {
+    "model": "llama3.2:latest",
+    "timestamp": "2026-01-09 20:45:38",
+    "total_tests": 23,
+    "tool_selection_correct": 19,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 0,
+    "parameter_extraction_total": 19,
+    "combined_perfect": 0,
+    "avg_tool_selection_accuracy": 0.8260869565217391,
+    "avg_parameter_accuracy": 0.0,
+    "avg_combined_accuracy": 0.0,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 5.943451166152954
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.1486928462982178
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.09523606300354
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_ios",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.1413145065307617
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.1531305313110352
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.093832015991211
+      },
+      {
+        "index": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.1594841480255127
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.0898334980010986
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.0115840435028076
+      },
+      {
+        "index": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.2438526153564453
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "automatrix",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.0918161869049072
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.000013828277588
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.1013882160186768
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.0378968715667725
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "automatrix",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.1402137279510498
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.2668695449829102
+      },
+      {
+        "index": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.2369070053100586
+      },
+      {
+        "index": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.29402494430542
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.178588628768921
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.0931828022003174
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.2210676670074463
+      },
+      {
+        "index": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.183128833770752
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.1387534141540527
+      }
+    ],
+    "latencies": [
+      5.943451166152954,
+      1.1486928462982178,
+      1.09523606300354,
+      1.1413145065307617,
+      1.1531305313110352,
+      1.093832015991211,
+      1.1594841480255127,
+      1.0898334980010986,
+      1.0115840435028076,
+      1.2438526153564453,
+      1.0918161869049072,
+      1.000013828277588,
+      1.1013882160186768,
+      1.0378968715667725,
+      1.1402137279510498,
+      1.2668695449829102,
+      1.2369070053100586,
+      1.29402494430542,
+      1.178588628768921,
+      1.0931828022003174,
+      1.2210676670074463,
+      1.183128833770752,
+      1.1387534141540527
+    ],
+    "errors": [],
+    "latency_stats": {
+      "mean_s": 1.3506201350170632,
+      "median_s": 1.1413145065307617,
+      "min_s": 1.000013828277588,
+      "max_s": 5.943451166152954
+    }
+  },
+  {
+    "model": "mistral-nemo:latest",
+    "timestamp": "2026-01-09 20:46:09",
+    "total_tests": 23,
+    "tool_selection_correct": 20,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 10,
+    "parameter_extraction_total": 20,
+    "combined_perfect": 10,
+    "avg_tool_selection_accuracy": 0.8695652173913043,
+    "avg_parameter_accuracy": 0.6840579710144927,
+    "avg_combined_accuracy": 0.6840579710144927,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 4.578694581985474
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 2.0585594177246094
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.5421078205108643
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.572274684906006
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.25,
+        "is_perfect": false,
+        "latency": 2.284487009048462
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.428783893585205
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 1.7363841533660889
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.2650246620178223
+      },
+      {
+        "index": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 2.647451639175415
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 2.2821667194366455
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.139458417892456
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.454550266265869
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.3383495807647705
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.565448760986328
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.6451544761657715
+      },
+      {
+        "index": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 1.9539368152618408
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.4003288745880127
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 2.0972788333892822
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 2.7781412601470947
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.4,
+        "is_perfect": false,
+        "latency": 1.8142163753509521
+      }
+    ],
+    "latencies": [
+      4.578694581985474,
+      2.0585594177246094,
+      2.5421078205108643,
+      2.572274684906006,
+      2.284487009048462,
+      2.428783893585205,
+      1.3747203350067139,
+      1.7363841533660889,
+      2.2650246620178223,
+      2.647451639175415,
+      2.2821667194366455,
+      2.139458417892456,
+      2.454550266265869,
+      2.3383495807647705,
+      2.565448760986328,
+      2.6451544761657715,
+      1.4285862445831299,
+      1.9539368152618408,
+      2.4003288745880127,
+      2.0972788333892822,
+      2.7781412601470947,
+      1.420288324356079,
+      1.8142163753509521
+    ],
+    "errors": [
+      {
+        "test": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "error": "unsupported format string passed to NoneType.__format__"
+      },
+      {
+        "test": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "error": "unsupported format string passed to NoneType.__format__"
+      },
+      {
+        "test": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "error": "unsupported format string passed to NoneType.__format__"
+      }
+    ],
+    "latency_stats": {
+      "mean_s": 2.295930136804995,
+      "median_s": 2.284487009048462,
+      "min_s": 1.3747203350067139,
+      "max_s": 4.578694581985474
+    }
+  },
+  {
+    "model": "nemotron-mini:latest",
+    "timestamp": "2026-01-09 20:47:02",
+    "total_tests": 23,
+    "tool_selection_correct": 18,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 0,
+    "parameter_extraction_total": 18,
+    "combined_perfect": 0,
+    "avg_tool_selection_accuracy": 0.782608695652174,
+    "avg_parameter_accuracy": 0.0,
+    "avg_combined_accuracy": 0.0,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 3.234567165374756
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 2.216817617416382
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.6719565391540527
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.72414231300354
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "amasss_cli",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.9717984199523926
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.5849213600158691
+      },
+      {
+        "index": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "expected_tool": "automatrix",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.867490530014038
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.7777433395385742
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.4123890399932861
+      },
+      {
+        "index": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.6929607391357422
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.4573020935058594
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.2809906005859375
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.4620015621185303
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.4128117561340332
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.8508315086364746
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.5362861156463623
+      },
+      {
+        "index": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.6822209358215332
+      },
+      {
+        "index": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.5226874351501465
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.6753628253936768
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.4545223712921143
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.9540963172912598
+      },
+      {
+        "index": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.8761217594146729
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 2.0677554607391357
+      }
+    ],
+    "latencies": [
+      3.234567165374756,
+      2.216817617416382,
+      1.6719565391540527,
+      1.72414231300354,
+      1.9717984199523926,
+      1.5849213600158691,
+      1.867490530014038,
+      1.7777433395385742,
+      1.4123890399932861,
+      1.6929607391357422,
+      1.4573020935058594,
+      1.2809906005859375,
+      1.4620015621185303,
+      1.4128117561340332,
+      1.8508315086364746,
+      1.5362861156463623,
+      1.6822209358215332,
+      1.5226874351501465,
+      1.6753628253936768,
+      1.4545223712921143,
+      1.9540963172912598,
+      1.8761217594146729,
+      2.0677554607391357
+    ],
+    "errors": [],
+    "latency_stats": {
+      "mean_s": 1.755990339362103,
+      "median_s": 1.6822209358215332,
+      "min_s": 1.2809906005859375,
+      "max_s": 3.234567165374756
+    }
+  },
+  {
+    "model": "phi4:latest",
+    "timestamp": "2026-01-09 20:47:42",
+    "total_tests": 23,
+    "tool_selection_correct": 22,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 15,
+    "parameter_extraction_total": 22,
+    "combined_perfect": 15,
+    "avg_tool_selection_accuracy": 0.9565217391304348,
+    "avg_parameter_accuracy": 0.8210144927536231,
+    "avg_combined_accuracy": 0.8210144927536231,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 5.679368257522583
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.3333333333333333,
+        "is_perfect": false,
+        "latency": 3.2608792781829834
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 3.4229233264923096
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 4.024004220962524
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 3.581507682800293
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.433530807495117
+      },
+      {
+        "index": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.4463295936584473
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.4475605487823486
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.141608715057373
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 2.3529202938079834
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.1654624938964844
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 3.195725440979004
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.1280250549316406
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.4918413162231445
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.3727104663848877
+      },
+      {
+        "index": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.612147092819214
+      },
+      {
+        "index": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 5.198367357254028
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.757462739944458
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 3.22389554977417
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 5.7688493728637695
+      },
+      {
+        "index": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 3.6342642307281494
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 4.369040012359619
+      }
+    ],
+    "latencies": [
+      5.679368257522583,
+      3.2608792781829834,
+      3.4229233264923096,
+      4.024004220962524,
+      3.581507682800293,
+      3.433530807495117,
+      3.4463295936584473,
+      3.4475605487823486,
+      3.141608715057373,
+      1.7133405208587646,
+      2.3529202938079834,
+      3.1654624938964844,
+      3.195725440979004,
+      3.1280250549316406,
+      3.4918413162231445,
+      3.3727104663848877,
+      3.612147092819214,
+      5.198367357254028,
+      3.757462739944458,
+      3.22389554977417,
+      5.7688493728637695,
+      3.6342642307281494,
+      4.369040012359619
+    ],
+    "errors": [
+      {
+        "test": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "error": "unsupported format string passed to NoneType.__format__"
+      }
+    ],
+    "latency_stats": {
+      "mean_s": 3.627033233642578,
+      "median_s": 3.4463295936584473,
+      "min_s": 1.7133405208587646,
+      "max_s": 5.7688493728637695
+    }
+  },
+  {
+    "model": "qwen3:latest",
+    "timestamp": "2026-01-09 20:49:06",
+    "total_tests": 23,
+    "tool_selection_correct": 22,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 16,
+    "parameter_extraction_total": 22,
+    "combined_perfect": 16,
+    "avg_tool_selection_accuracy": 0.9565217391304348,
+    "avg_parameter_accuracy": 0.8971014492753623,
+    "avg_combined_accuracy": 0.8971014492753623,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detect landmarks in /data/cbct using /models/ali. Output to /out_dir.",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.2042396068573
+      },
+      {
+        "index": 2,
+        "query": "Extract landmarks for teeth 8 and 9 from /scans/ios.obj to /results.",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 6.727834701538086
+      },
+      {
+        "index": 3,
+        "query": "Segment Mandible from /vol.nii.gz using /weights/amasss. Save to /output.",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 11.17384123802185
+      },
+      {
+        "index": 4,
+        "query": "Register T1 /data/T1 with T2 /data/T2 using MAND type to /reg_out.",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.195977449417114
+      },
+      {
+        "index": 5,
+        "query": "Align /T1.stl to /T2.stl with model /models/refine. Output to /aligned.",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.686641693115234
+      },
+      {
+        "index": 6,
+        "query": "Crop volumes in /raw using /meta/roi.json. Save results to /cropped.",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.584598779678345
+      },
+      {
+        "index": 7,
+        "query": "Apply /mats/m.txt to /scans/p.nii.gz with ref /ref.nii.gz to /out.",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 25.690714359283447
+      },
+      {
+        "index": 8,
+        "query": "Batch segment /all_scans with /models/nnunet. Save to /masks_out.",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.279226779937744
+      },
+      {
+        "index": 9,
+        "query": "Run CLIC on /patients with /models/clic_v1. Output to /masks.",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.426774978637695
+      },
+      {
+        "index": 11,
+        "query": "Warp /mesh.vtk using butterfly method. Save to /warped_out.",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 5.679080486297607
+      },
+      {
+        "index": 12,
+        "query": "Create dashboard from /reports/summaries. Output to /web_out.",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 4.516541957855225
+      },
+      {
+        "index": 13,
+        "query": "Summarize notes in /data/notes using t5-base. Save to /summaries.",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.526771783828735
+      },
+      {
+        "index": 14,
+        "query": "Approximate MRI /mri_dir to CBCT /cbct_ref. Save to /approx_out.",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 5.45757532119751
+      },
+      {
+        "index": 15,
+        "query": "Register MRI /mri to CBCT /cbct with mask /seg to /aligned.",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.037116289138794
+      },
+      {
+        "index": 16,
+        "query": "LR crop CBCT /c, MRI /m, and Seg /s. Output to /lr_results.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.477707624435425
+      },
+      {
+        "index": 17,
+        "query": "Center MRI /raw using dir -1,0,0,0,-1,0,0,0,1 to /centered.",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.296658039093018
+      },
+      {
+        "index": 18,
+        "query": "Resample /raw_vol to [256,256,128]. Output to /resampled_out.",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 11.742307901382446
+      },
+      {
+        "index": 19,
+        "query": "Crop TMJ from /cbct and /mri with /seg. Save to /tmj_out.",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.90839147567749
+      },
+      {
+        "index": 20,
+        "query": "Pre-ASO CBCT /data/raw using /models/aso to /aso_out.",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.523722887039185
+      },
+      {
+        "index": 21,
+        "query": "Standardize Upper IOS /ios with gold /ref. Output to /out.",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.717287063598633
+      },
+      {
+        "index": 22,
+        "query": "Orient CBCT /scans to /gold with Sella,Nasion to /oriented.",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 7.007354974746704
+      },
+      {
+        "index": 23,
+        "query": "Semi-ASO Lower IOS /ios to /gold with Cusp,Fossa to /out.",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 9.025933265686035
+      }
+    ],
+    "latencies": [
+      9.2042396068573,
+      6.727834701538086,
+      11.17384123802185,
+      9.195977449417114,
+      7.686641693115234,
+      7.584598779678345,
+      25.690714359283447,
+      7.279226779937744,
+      6.426774978637695,
+      3.90543532371521,
+      5.679080486297607,
+      4.516541957855225,
+      6.526771783828735,
+      5.45757532119751,
+      7.037116289138794,
+      7.477707624435425,
+      9.296658039093018,
+      11.742307901382446,
+      6.90839147567749,
+      9.523722887039185,
+      8.717287063598633,
+      7.007354974746704,
+      9.025933265686035
+    ],
+    "errors": [
+      {
+        "test": 10,
+        "query": "Classify meshes in /meshes with resnet and 3 classes to /analysis.",
+        "error": "unsupported format string passed to NoneType.__format__"
+      }
+    ],
+    "latency_stats": {
+      "mean_s": 8.4257275643556,
+      "median_s": 7.477707624435425,
+      "min_s": 3.90543532371521,
+      "max_s": 25.690714359283447
+    }
+  }
+]

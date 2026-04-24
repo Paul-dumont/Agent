@@ -183,7 +183,7 @@ class CLICWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
                     "input_path": str(scan),
                     "model_folder": self.model_dir,
                     "output_dir": self.output_dir,
-                    "suffix": self.ui.suffixLineEdit.text or "seg"
+                    "suffix": "seg"
                 }))
                             # debug avant d’invoquer CondaSetUp
                 self.sig.log.emit(f"[DEBUG] getCondaPath(): {self.conda.getCondaPath()!r}")

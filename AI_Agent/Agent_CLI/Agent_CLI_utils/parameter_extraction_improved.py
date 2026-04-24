@@ -195,29 +195,24 @@ class ImprovedParameterExtractor:
         self.scripts = {s["name"]: s for s in self.manifest.get("scripts", [])}
         self.example_builder = FewShotExampleBuilder(manifest_path)
     
-    def build_prompt(self, tool_name: str, user_text: str) -> str:
+    def build_prompt(self, tool_name: str, user_text: str,tool_spec) -> str:
         """
         Construire un prompt amélioré avec few-shot examples
         """
-        
-        tool_spec = self.scripts.get(tool_name)
-        if not tool_spec:
-            return ""
         
         # 1. Construire la section des paramètres avec types
         params_section = self._build_params_section(tool_spec)
         
         # 2. Construire les exemples few-shot
-        few_shot_examples = self._build_few_shot_section(tool_name, tool_spec)
+#         few_shot_examples = self._build_few_shot_section(tool_name, tool_spec)
+#         EXAMPLES OF CORRECT EXTRACTION:
+# {few_shot_examples}
         
         # 3. Construire le prompt final
         prompt = f"""Extract parameters from the user request for tool: {tool_name}
 
 PARAMETER DEFINITIONS:
 {params_section}
-
-EXAMPLES OF CORRECT EXTRACTION:
-{few_shot_examples}
 
 EXTRACTION RULES:
 1. For lists: Use the correct format based on 'encode':

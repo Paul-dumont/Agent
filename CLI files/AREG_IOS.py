@@ -71,7 +71,7 @@ def main(args):
 
         name = os.path.basename(dataset.getUpperPath(idx, "T1"))
 
-        WriteSurf(surf_T1, args.output, name, args.suffix)
+        WriteSurf(surf_T1, args.output, name, "Reg")
 
         with open(args.log_path, "r+") as log_f:
             log_f.write(str(1))
@@ -86,7 +86,7 @@ def main(args):
         output_icp = icp.run(surf_T2, surf_T1)
 
         name = os.path.basename(dataset.getUpperPath(idx, "T2"))
-        WriteSurf(output_icp["source_Or"], args.output, name, args.suffix)
+        WriteSurf(output_icp["source_Or"], args.output, name, "Reg")
         
         patient_id = name.split("_T2")[0]
         
@@ -101,18 +101,18 @@ def main(args):
             except Exception as e:
                 print(f"Error copying T1 matrix for {name}: {e}")
 
-            saveMatrixAsTfm(output_icp["matrix"], aso_tfm_path_T2, args.output, patient_id, args.suffix, args.areg_mode)
+            saveMatrixAsTfm(output_icp["matrix"], aso_tfm_path_T2, args.output, patient_id, "Reg", args.areg_mode)
         
         if lower:
             surf_lower = dataset.getLowerSurf(idx, "T2")
             surf_lower = TransformSurf(surf_lower, output_icp["matrix"])
             name_lower = os.path.basename(dataset.getLowerPath(idx, "T2"))
-            WriteSurf(surf_lower, args.output, name_lower, args.suffix)
+            WriteSurf(surf_lower, args.output, name_lower, "Reg")
 
             surf_lower = dataset.getLowerSurf(idx, "T1")
             if surf_lower!=None :
                 name_lower = os.path.basename(dataset.getLowerPath(idx, "T1"))
-                WriteSurf(surf_lower, args.output, name_lower, args.suffix)
+                WriteSurf(surf_lower, args.output, name_lower, "Reg")
 
         with open(args.log_path, "w+") as log_f:
             log_f.write(str(idx + 1))
@@ -127,7 +127,6 @@ if __name__ == "__main__":
     parser.add_argument("T2", type=str)
     parser.add_argument("output", type=str)
     parser.add_argument("model", type=str)
-    parser.add_argument("suffix", type=str)
     parser.add_argument("log_path", type=str)
     parser.add_argument("areg_mode", type=str)
 

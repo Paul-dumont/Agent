@@ -1,9 +1,8 @@
 import logging
 import os
 from typing import Annotated
-
+import qt
 import vtk
-
 import slicer
 from slicer.i18n import tr as _
 from slicer.i18n import translate
@@ -11,11 +10,74 @@ from slicer.ScriptedLoadableModule import *
 from slicer.util import VTKObservationMixin
 from slicer.parameterNodeWrapper import (
     parameterNodeWrapper,
-    WithinRange,
-)
+    WithinRange)
 
 from slicer import vtkMRMLScalarVolumeNode
 
+class DropZone(qt.QFrame):
+    """Zone drag&drop multi-fichiers/dossiers. Émet une liste de paths locaux."""
+    dropped = qt.Signal(list)
+
+    def __init__(self, parent=None, title="Drop files or folders here",objectName = "dropZone"):
+        super().__init__(parent)
+        self.setAcceptDrops(True)
+        self.setObjectName(objectName)
+        self.setFrameShape(qt.QFrame.StyledPanel)
+        self.setFrameShadow(qt.QFrame.Plain)
+        self.setMinimumHeight(100)
+
+        self._label = qt.QLabel(title)
+        self._label.alignment = qt.Qt.AlignCenter
+
+        lay = qt.QVBoxLayout(self)
+        lay.setContentsMargins(10, 10, 10, 10)
+        lay.addWidget(self._label)
+
+        # style “drop zone”
+        self.setStyleSheet("""
+            QFrame {
+                border: 2px dashed #b8c4d6;
+                border-radius: 8px;
+                background: #ffffff;
+            }
+            QLabel {
+                color: #34495e;
+                font-weight: 800;
+            }
+        """)
+
+    def dragEnterEvent(self, event):
+        md = event.mimeData()
+        if md.hasUrls():
+            event.acceptProposedAction()
+        else:
+            event.ignore()
+
+    def dragMoveEvent(self, event):
+        self.dragEnterEvent(event)
+
+    def dropEvent(self, event):
+        urls = event.mimeData().urls()
+        paths = []
+        for u in urls:
+            if u.isLocalFile():
+                p = u.toLocalFile()
+                if p:
+                    paths.append(p)
+
+        if paths:
+            self.dropped.emit(paths)
+
+        event.acceptProposedAction()
+    
+    def setSummary(self, paths):
+        if not paths:
+            self._label.setText("Drop files or folders here")
+            return
+
+        preview = "\n".join(paths[:3])
+        more = "" if len(paths) <= 3 else f"\n... (+{len(paths)-3} more)"
+        self._label.setText(f"Dropped {len(paths)} item(s):\n{preview}{more}")
 
 #
 # Agent_UI
@@ -29,24 +91,19 @@ class Agent_UI(ScriptedLoadableModule):
 
     def __init__(self, parent):
         ScriptedLoadableModule.__init__(self, parent)
-        self.parent.title = _("Agent_UI")  # TODO: make this more human readable by adding spaces
-        # TODO: set categories (folders where the module shows up in the module selector)
+        self.parent.title = _("Agent_UI")
         self.parent.categories = [translate("qSlicerAbstractCoreModule", "AGENT")]
-        self.parent.dependencies = []  # TODO: add here list of module names that this module requires
-        self.parent.contributors = ["John Doe (AnyWare Corp.)"]  # TODO: replace with "Firstname Lastname (Organization)"
-        # TODO: update with short description of the module and a link to online module documentation
-        # _() function marks text as translatable to other languages
+        self.parent.dependencies = []
+        self.parent.contributors = ["John Doe (AnyWare Corp.)"]
         self.parent.helpText = _("""
 This is an example of scripted loadable module bundled in an extension.
 See more information in <a href="https://github.com/organization/projectname#Agent_UI">module documentation</a>.
 """)
-        # TODO: replace with organization, grant and thanks
         self.parent.acknowledgementText = _("""
 This file was originally developed by Jean-Christophe Fillion-Robin, Kitware Inc., Andras Lasso, PerkLab,
 and Steve Pieper, Isomics, Inc. and was partially funded by NIH grant 3P41RR013218-12S1.
 """)
 
-        # Additional initialization step after application startup is complete
         slicer.app.connect("startupCompleted()", registerSampleData)
 
 
@@ -118,15 +175,14 @@ class Agent_UIParameterNode:
     """
 
     prompt: str
-    inputfolder: str
-    outputfolder: str
+    folders: list
     modeagent: str
 
 #
 # Agent_UIWidget
 #
 
-import qt  # à mettre en haut du fichier si pas déjà
+# import qt
 
 class TextEditEnterFilter(qt.QObject):
     def __init__(self, parent, callback):
@@ -140,15 +196,13 @@ class TextEditEnterFilter(qt.QObject):
             key = event.key()
             modifiers = event.modifiers()
 
-            # Enter ou Return
+            # Enter
             if key in (qt.Qt.Key_Return, qt.Qt.Key_Enter):
-                # Shift+Enter -> nouvelle ligne, on laisse passer
+                # Shift+Enter -> New line
                 if modifiers & qt.Qt.ShiftModifier:
                     return False
-
-                # Sinon, on lance la fonction
                 self.callback()
-                return True  # on consomme l'événement (pas de saut de ligne)
+                return True
 
         return False
 
@@ -167,6 +221,7 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self._parameterNode = None
         self._parameterNodeGuiTag = None
         self.CliStartTime=0
+        self._requiredWidgets = {}
 
     def setup(self) -> None:
         import qt
@@ -179,49 +234,96 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self.layout.addWidget(uiWidget)
         self.ui = slicer.util.childWidgetVariables(uiWidget)
 
+        self.dropZone = DropZone(objectName="dropZoneInput")
+
+        self.dropZoneButton = qt.QPushButton("x")
+
+        self.dropZoneButton.setStyleSheet("""
+        QPushButton {
+            background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+                                            stop:0 #e74c3c, /* Rouge vif */
+                                            stop:1 #c0392b); /* Rouge légèrement plus foncé */
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 10pt;
+            padding: 8px; 
+            margin-top: 4px; /* Déplacer cette déclaration ici */
+        }
+
+        QPushButton:hover:!pressed {
+            /* Rouge plus clair au survol */
+            background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+                                            stop:0 #e9685a, /* Rouge vif légèrement éclairci */
+                                            stop:1 #d64d3c);
+        }
+
+        QPushButton:pressed {
+            /* Rouge foncé au clic (effet d'enfoncement) */
+            background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, 
+                                            stop:0 #a93226, /* Rouge très foncé */
+                                            stop:1 #8e241b);
+        }
+
+        QPushButton:disabled {
+            /* État désactivé (gris) */
+            background-color: #bdc3c7;
+            color: #95a5a6;
+        }
+        """)
+
+        self.dropZoneLayout = qt.QHBoxLayout()
+
+        self.dropZoneLayout.setContentsMargins(0, 0, 0, 0)
+        self.dropZoneLayout.setSpacing(5)
+
+        self.dropZoneLayout.addWidget(self.dropZone,98)
+        self.dropZoneLayout.addWidget(self.dropZoneButton,2)
+
+        self.dropZoneContainer = qt.QWidget()
+        self.dropZoneContainer.setLayout(self.dropZoneLayout)
+
+        self.ui.formLayout_2.addRow("Drop zone", self.dropZoneContainer)
+
+        self.dropZone.dropped.connect(self.onDroppedPaths)
+
+        # Retrieve the list
+        self.droppedInputPaths = []
+
         self.enterFilter = TextEditEnterFilter(self.ui.textEdit_2, self.onReturnPressed)
         self.ui.textEdit_2.installEventFilter(self.enterFilter)
 
-
         te = self.ui.textEdit_2
 
-        # Hauteur d'une ligne selon la police
         fm = te.fontMetrics()
         lineHeight = fm.lineSpacing()
 
         minLines = 1
         maxLines = 6
 
-        # Calcul des hauteurs min/max en pixels
         minHeight = int(lineHeight * minLines + te.frameWidth * 2 + 8)
         maxHeight = int(lineHeight * maxLines + te.frameWidth * 2 + 8)
 
-        # Appliquer min / max
         te.setMinimumHeight(minHeight)
         te.setMaximumHeight(maxHeight)
 
-        # Scrollbar seulement si besoin
         te.setVerticalScrollBarPolicy(qt.Qt.ScrollBarAsNeeded)
 
-        # Taille horizontale Expanding, verticale contrôlée par nous
         te.setSizePolicy(qt.QSizePolicy.Expanding, qt.QSizePolicy.Fixed)
 
-        # Hauteur de départ = minimum (1 ligne)
         te.setFixedHeight(minHeight)
 
-        # Fonction pour ajuster la hauteur en fonction du contenu
         def _autoResizeTextEdit():
             docHeight = te.document.size.height()
-            h = int(docHeight) + 10  # petit padding
+            h = int(docHeight) + 10  # little padding
             if h < minHeight:
                 h = minHeight
             if h > maxHeight:
                 h = maxHeight
             te.setFixedHeight(h)
 
-        # Quand le texte change, on ajuste la hauteur entre min et max
         te.textChanged.connect(_autoResizeTextEdit)
-
 
         # Set scene in MRML widgets. Make sure that in Qt designer the top-level qMRMLWidget's
         # "mrmlSceneChanged(vtkMRMLScene*)" signal in is connected to each MRML widget's.
@@ -243,12 +345,12 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self.ui.SaveButton.connect("clicked(bool)", self.OnSaveButton)
         self.ui.ClearButton.connect("clicked(bool)", self.OnClearButton)
         self.ui.RetrieveButton.connect("clicked(bool)",self.OnRetrieveButton)
+        self.ui.CheckButton.connect("clicked(bool)",self.CheckDependencies)
         
         # Connect UI signals to checkCanApply
         self.ui.textEdit_2.connect("textChanged()", self._checkCanApply)
-        self.ui.PathLineEdit.connect("currentPathChanged(QString)", self._checkCanApply)
-        self.ui.PathLineEdit_2.connect("currentPathChanged(QString)", self._checkCanApply)
         self.ui.comboBox.currentIndexChanged.connect(self._checkCanApply)
+        self.dropZoneButton.connect("clicked(bool)",self.clearDropzone)
 
 
         self.ui.label_4.hide()
@@ -256,6 +358,20 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         # Make sure parameter node is initialized (needed for module reload)
         self.initializeParameterNode()
 
+    def onDroppedPaths(self, paths):
+        norm = []
+        seen = set()
+        for p in paths:
+            p = os.path.normpath(p)
+            if p not in seen:
+                seen.add(p)
+                norm.append(p)
+        for path in norm:
+            self.droppedInputPaths.append(path)
+
+        # Show summary in the drop area
+        self.dropZone.setSummary(self.droppedInputPaths)
+        self._checkCanApply()
 
     def cleanup(self) -> None:
         """Called when the application closes and the module widget is destroyed."""
@@ -295,10 +411,8 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         # Select default input nodes only if they are not already set
         if not self._parameterNode.prompt:
             self._parameterNode.prompt = ""
-        if not self._parameterNode.inputfolder:
-            self._parameterNode.inputfolder = ""
-        if not self._parameterNode.outputfolder:
-            self._parameterNode.outputfolder = ""
+        if not self._parameterNode.folders:
+            self._parameterNode.folders = []
         if not self._parameterNode.modeagent:
             self._parameterNode.modeagent = "Agent (Automated)"
 
@@ -312,18 +426,12 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         if self._parameterNode:
             self.ui.textEdit_2.blockSignals(True)
-            self.ui.PathLineEdit.blockSignals(True)
-            self.ui.PathLineEdit_2.blockSignals(True)
             self.ui.comboBox.blockSignals(True)
 
             self.ui.textEdit_2.setPlainText(self._parameterNode.prompt or "")
-            self.ui.PathLineEdit.setCurrentPath(self._parameterNode.inputfolder or "")
-            self.ui.PathLineEdit_2.setCurrentPath(self._parameterNode.outputfolder or "")
             self.ui.comboBox.setCurrentText(self._parameterNode.modeagent or "Agent (Automated)")
 
             self.ui.textEdit_2.blockSignals(False)
-            self.ui.PathLineEdit.blockSignals(False)
-            self.ui.PathLineEdit_2.blockSignals(False)
             self.ui.comboBox.blockSignals(False)
 
             self._checkCanApply()
@@ -333,32 +441,41 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             self.ui.applyButton.enabled = False
             self.ui.SaveButton.enabled = False
             self.ui.ClearButton.enabled = False
+            self.ui.CheckButton.enabled = False
             return
         
         # Update parameter node values from UI
         self._parameterNode.prompt = self.ui.textEdit_2.toPlainText()
-        self._parameterNode.inputfolder = self.ui.PathLineEdit.currentPath
-        self._parameterNode.outputfolder = self.ui.PathLineEdit_2.currentPath
         self._parameterNode.modeagent = self.ui.comboBox.currentText
+        self._parameterNode.folders = self.droppedInputPaths
         
         # Check if all required fields are filled
         has_prompt = self._parameterNode.prompt.strip() != ""
-        has_input = self._parameterNode.inputfolder.strip() != ""
-        has_output = self._parameterNode.outputfolder.strip() != ""
-        
-        if has_prompt and has_input and has_output:
-            self.ui.applyButton.toolTip = _("Click to give your prompt to the agent")
-            self.ui.applyButton.enabled = True
+        has_folders = self._parameterNode.folders != []
+
+        if self._parameterNode.modeagent == "Agent (Automated)":
+            if has_prompt and has_folders and not self.ui.label_4.isVisible():
+                self.ui.applyButton.toolTip = _("Click to give your prompt to the agent")
+                self.ui.applyButton.enabled = True
+            else:
+                missing = []
+                if not has_prompt:
+                    missing.append("prompt")
+                if not has_folders:
+                    missing.append("folders")
+                self.ui.applyButton.toolTip = _(f"Fill: {', '.join(missing)}")
+                self.ui.applyButton.enabled = False
         else:
-            missing = []
-            if not has_prompt:
-                missing.append("prompt")
-            if not has_input:
-                missing.append("input folder")
-            if not has_output:
-                missing.append("output folder")
-            self.ui.applyButton.toolTip = _(f"Fill: {', '.join(missing)}")
-            self.ui.applyButton.enabled = False
+            if has_prompt and not self.ui.label_4.isVisible():
+                self.ui.applyButton.toolTip = _("Click to give your prompt to the agent")
+                self.ui.applyButton.enabled = True
+            else:
+                missing = []
+                if not has_prompt:
+                    missing.append("prompt")
+                self.ui.applyButton.toolTip = _(f"Fill: {', '.join(missing)}")
+                self.ui.applyButton.enabled = False
+
 
         if self.ui.textEdit.toPlainText()!="":
             self.ui.SaveButton.toolTip = _("Click to save your chat with the agent")
@@ -366,35 +483,10 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
             self.ui.ClearButton.toolTip = _("Click to clear your chat with the agent")
             self.ui.ClearButton.enabled = True
         else:
-            self.ui.ClearButton.toolTip = _(f"Start a chat with the LLM to be able to save")
+            self.ui.ClearButton.toolTip = _(f"Start a chat with the LLM to be able to clear it")
             self.ui.ClearButton.enabled = False
-            self.ui.SaveButton.toolTip = _(f"Start a chat with the LLM to be able to save")
+            self.ui.SaveButton.toolTip = _(f"Start a chat with the LLM to be able to save it")
             self.ui.SaveButton.enabled = False
-
-    def eventFilter(self, obj, event):
-        import qt
-
-        # On intercepte les touches dans textEdit_2
-        if obj == self.ui.textEdit_2 and event.type() == qt.QEvent.KeyPress:
-            key = event.key()
-            modifiers = event.modifiers()
-
-            # Enter ou Return
-            if key in (qt.Qt.Key_Return, qt.Qt.Key_Enter):
-                # Si Shift+Enter -> on laisse faire (nouvelle ligne)
-                if modifiers & qt.Qt.ShiftModifier:
-                    return False  # ne consomme pas l'événement
-
-                # Sinon, on lance la fonction (par ex. onApplyButton)
-                if self.ui.applyButton.isEnabled():
-                    self.onReturnPressed()
-                else:
-                    # pour debug si tu veux
-                    print("Apply button disabled, Enter ignoré.")
-                return True  # on consomme l'événement (pas de saut de ligne)
-
-        # Pour tout le reste, comportement normal
-        return super().eventFilter(obj, event)
 
     def to_html(self, text):
         """Échappe le texte pour le HTML tout en préservant la mise en forme."""
@@ -403,9 +495,9 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         text = text.replace(">", "&gt;")
         text = text.replace('"', "&quot;")
         text = text.replace("'", "&#39;")
-        # Convertir les retours à la ligne en <br>
+
         text = text.replace("\n", "<br>")
-        # Convertir les espaces multiples en espaces insécables
+
         text = text.replace("  ", "&nbsp;&nbsp;")
         return text
 
@@ -438,6 +530,17 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         self.ui.textEdit.setTextCursor(cursor)
         self.ui.textEdit.ensureCursorVisible()
 
+    def normalize_folders(self,folders):
+        if folders is None:
+            return []
+        if isinstance(folders, (list, tuple)):
+            return list(folders)
+        try:
+            # ObservedList, Qt list, etc.
+            return list(folders)
+        except TypeError:
+            return [str(folders)]
+
     def onApplyButton(self) -> None:
         import time
         self.CliStartTime = time.time()
@@ -447,24 +550,133 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         message = "👨:" + self._parameterNode.prompt
         self.add_user_message(message)
 
+        self.droppedInputPaths = self.normalize_folders(self.droppedInputPaths)
+
+        if not self.droppedInputPaths:
+            self.droppedInputPaths.append(['nothing'])
+
         cliParams = {
-            "inputfolder": self._parameterNode.inputfolder,
-            "outputfolder": self._parameterNode.outputfolder,
+            "folders": self.droppedInputPaths,
             "prompt": self._parameterNode.prompt,
-            "modeagent": self._parameterNode.modeagent
+            "modeagent": self._parameterNode.modeagent,
+            "temp_folder":slicer.util.tempDirectory()
         }
-
         CLI = slicer.modules.agent_cli
-
-        # lancement ASYNCHRONE
+            
         self.cliNode = slicer.cli.run(CLI, None, cliParams)
 
-        # observer les changements de status
+        if 'nothing' in self.droppedInputPaths:
+            self.droppedInputPaths.remove('nothing')
+
         self.addObserver(self.cliNode, vtk.vtkCommand.ModifiedEvent, self.onCliUpdated)
 
-        # éventuellement désactiver le bouton Apply pendant le run
         self.ui.applyButton.enabled = False
         self.ui.textEdit_2.clear()
+
+    def showRequiredParameters(self, required_parameters):
+        """
+        required_parameters: list[dict] (ce que ton CLI renvoie)
+        """
+        layout = self.paramsFormLayout
+
+        # Clear form
+        while layout.rowCount() > 0:
+            layout.removeRow(0)
+
+        self._requiredWidgets = {}
+
+        for p in required_parameters:
+            name = p["name"]
+            ptype = p.get("type", "str")
+            desc = p.get("description", "")
+            val  = p.get("value", None)
+            miss = bool(p.get("is_missing", False))
+
+            label = qt.QLabel(f"{name} *")
+            label.setToolTip(desc)
+
+            w = self._makeWidgetForRequired(ptype)
+            self._setWidgetValue(w, ptype, val)
+
+            if miss:
+                label.setStyleSheet("color: #b00020; font-weight: 600;")
+
+            layout.addRow(label, w)
+            self._requiredWidgets[name] = (p, w)
+
+    def _makeWidgetForRequired(self, ptype: str):
+        import ctk
+        if ptype == "path":
+            w = ctk.ctkPathLineEdit()
+            w.filters = ctk.ctkPathLineEdit.Files | ctk.ctkPathLineEdit.Dirs
+            return w
+
+        if ptype == "bool":
+            return qt.QCheckBox()
+
+        if ptype == "int":
+            sb = qt.QSpinBox()
+            sb.minimum = -10**9
+            sb.maximum =  10**9
+            return sb
+
+        if ptype == "float":
+            dsb = qt.QDoubleSpinBox()
+            dsb.minimum = -1e12
+            dsb.maximum =  1e12
+            dsb.decimals = 6
+            return dsb
+
+        # list / list[float] / list[int] / str
+        return qt.QLineEdit()
+    
+    def _setWidgetValue(self, w, ptype: str, val):
+        if val is None:
+            val = ""
+
+        if ptype == "path":
+            w.setCurrentPath(str(val) if val else "")
+            return
+
+        if ptype == "bool":
+            w.checked = bool(val)
+            return
+
+        if ptype == "int":
+            try: w.value = int(val)
+            except: w.value = 0
+            return
+
+        if ptype == "float":
+            try: w.value = float(val)
+            except: w.value = 0.0
+            return
+
+        # list/str → text
+        w.text = str(val)
+
+    def _getWidgetValue(self, w, ptype: str):
+        if ptype == "path":
+            return w.currentPath
+
+        if ptype == "bool":
+            return bool(w.checked)
+
+        if ptype == "int":
+            return int(w.value)
+
+        if ptype == "float":
+            return float(w.value)
+
+        return w.text
+    
+    def collectRequiredCorrections(self):
+        corrections = {}
+        for name, (pdef, w) in self._requiredWidgets.items():
+            ptype = pdef.get("type", "str")
+            corrections[name] = self._getWidgetValue(w, ptype)
+        return corrections
+
 
     def onCliUpdated(self, caller, event):
         import time
@@ -474,44 +686,39 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
         status = cliNode.GetStatus()
 
-        # statut terminé (Completed / Failed / Cancelled)
         if status & slicer.vtkMRMLCommandLineModuleNode.Completed or \
            status & slicer.vtkMRMLCommandLineModuleNode.Cancelled:
 
-            # on n’a plus besoin de l’observer
             self.removeObserver(cliNode, vtk.vtkCommand.ModifiedEvent, self.onCliUpdated)
 
-            # cacher le label
             self.ui.applyButton.enabled = True
 
-            # récupérer le texte de sortie
             output_text = cliNode.GetOutputText()
-            output_text = output_text.replace("*","")
-            output_text = output_text.replace("#","")
+            print(output_text)
 
             if self._parameterNode.modeagent == "Agent (Automated)":
                 message = json.loads(output_text)
-                selected_tool = message.get("tool","")
-                missing_required = message.get("missing_required",[])
+                selected_tool = message.get("tool",None)
+                missing_required = message.get("missing_required",[]) 
                 params = message.get("parameters",{})
                 cli_args = message.get("command",[])
 
                 if selected_tool:
-                    if len(missing_required) > 0:
-                        output_text = f"""After reflexion I would like to run {selected_tool} but I need more parameters: {missing_required} """
+                    if missing_required == []:
+                        output_text = f"""After reflexion I would like to run {selected_tool}. Click on the Yes button to launch the module if the parameters are good for you"""
                         self.add_agent_message(output_text)
-                    else:
-                        output_text = f"""After reflexion I would like to run {selected_tool} with this parameters: {params} """
+
+                        parameters = "\n-".join(f"{key}={value}" for key, value in params.items())
 
                         reply = qt.QMessageBox.question(
                             None,
                             f"Run {selected_tool}",
-                            f"The agent want to run {selected_tool} with this parameter: {params}?",
+                            f"The agent want to run {selected_tool} with this parameter:\n\n-{parameters}\n\n If it seems good for you, click on the Yes button, else on the No button",
                             qt.QMessageBox.Yes | qt.QMessageBox.No
                         )
 
                         if reply == qt.QMessageBox.Yes:
-                            output_text+=f"\nRunning:{selected_tool}\n"
+                            output_text=f"\nRunning:{selected_tool}\n"
                             self.add_agent_message(output_text)
 
                             newText = f"LLM is running {selected_tool}"
@@ -521,13 +728,19 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
                             stdout = result.stdout.strip()
                             stderr = result.stderr.strip()
-
                             print(stdout)
                             print(stderr)
+
+                    else:
+                        missing = "\n-".join(missing_required)
+                        output_text = f"""After reflexion I would like to run {selected_tool} but for this I need these parameters:\n\n-{missing}"""
+                        self.add_agent_message(output_text)
                         
                 else:
                     output_text = f"""After reflexion I wasn't able to choose a module to run. Try to explain me your need in a other way."""
                     self.add_agent_message(output_text)
+            else:
+                self.add_agent_message(output_text)
 
             self.ui.label_4.setVisible(False)
             self._checkCanApply()
@@ -539,9 +752,10 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
 
     def OnSaveButton(self):
         import time
+        from pathlib import Path
 
         text=self.ui.textEdit.toPlainText()
-        filename = f"{self._parameterNode.outputfolder}/Chat_LLM_{time.strftime('%Y-%m-%d_%H-%M-%S')}.txt"
+        filename = f"{Path.home()}/Chat_LLM_{time.strftime('%Y-%m-%d_%H-%M-%S')}.txt"
 
         with open(filename, "w") as file:
             file.write(text)
@@ -556,6 +770,7 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
     def onReturnPressed(self):
         if self.ui.applyButton.isEnabled():
             self.onApplyButton()
+            
     def OnRetrieveButton(self):
         import qt
         fichier = qt.QFileDialog.getOpenFileName(
@@ -568,22 +783,52 @@ class Agent_UIWidget(ScriptedLoadableModuleWidget, VTKObservationMixin):
         with open(fichier, "r") as file:
             content = file.read()
         
-        output_list = content.split("🤖: ")
+        content = content.replace("🤖:","👨:")
+        output_list = content.split("👨:")
+        output_list.pop(0)
+        print(output_list)
 
         if len(output_list)<2:
             qt.QMessageBox.warning(None,"Text file incompatible","Please choose a text (.txt) file from a previous discussion with the agent")
         else:
-            for message in output_list:
-                if message.startswith("👨:"):
-                    self.add_user_message(message)
+            for i in range (len(output_list)):
+                if i%2 == 0:
+                    self.add_user_message("👨:"+output_list[i])
                 else:
-                    self.add_agent_message(message)
+                    self.add_agent_message(output_list[i])
 
             self._checkCanApply()
 
-#
-# Agent_UILogic
-#
+    def CheckDependencies(self):
+        import subprocess
+
+        slicer.util.pip_install("ollama")
+        list_model = ["gemma","gemma2"]
+
+        for model in list_model:
+            try:
+                subprocess.run(
+                    ['ollama', 'pull',model],
+                    capture_output=True,
+                    text=True
+                )
+                print(f"Model {model} has successfully been installed")
+                installed = True
+            except Exception as e:
+                print(f"Error getting models: {e}")
+                installed = False
+        
+        if installed:
+            qt.QMessageBox.information(None,"Dependencies checked and installed","All the dependencies have been checked and installed, now you can start to talk with your personal agent.")
+
+        else:
+            qt.QMessageBox.warning(None,"Dependencies installation issues","There has been an issue during the installation of the models, try again.")
+
+
+    def clearDropzone(self):
+        self.droppedInputPaths = []
+        self.dropZone.setSummary(self.droppedInputPaths)
+        self._checkCanApply()
 
 class Agent_UILogic(ScriptedLoadableModuleLogic):
     """This class should implement all the actual
@@ -603,14 +848,12 @@ class Agent_UILogic(ScriptedLoadableModuleLogic):
         return Agent_UIParameterNode(super().getParameterNode())
 
     def process(self,
-                inputfolder: str,
-                outputfolder: str,
+                folders: str,
                 prompt: str) -> str:
         """
         Run the processing algorithm.
         Can be used without GUI widget.
-        :param inputfolder: folder contenant les inputs
-        :param outputfolder: folder pour les outputs
+        :param folders: folders contenant les inputs
         :param prompt: prompt pour l'agent
         :return: output text du CLI
         """
@@ -621,8 +864,7 @@ class Agent_UILogic(ScriptedLoadableModuleLogic):
 
         # Compute the thresholded output volume using the "Threshold Scalar Volume" CLI module
         cliParams = {
-            "inputfolder": inputfolder,
-            "outputfolder": outputfolder,
+            "folders": folders,
             "prompt": prompt
         }
         CLI = slicer.modules.agent_cli

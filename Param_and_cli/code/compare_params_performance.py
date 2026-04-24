@@ -15,7 +15,7 @@ import statistics
 from datetime import datetime
 
 class AdvancedPerformanceComparison:
-    def __init__(self, queries_file="Param_and_cli/queries/benchmark_queries_with_params_simplified.json"):
+    def __init__(self, queries_file):
         self.queries_file = queries_file
         self.results = {}
         self.timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -261,7 +261,7 @@ class AdvancedPerformanceComparison:
         """Save results to JSON file."""
         if output_file is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = f"Param_and_cli/results/performance_comparison_params_{timestamp}.json"
+            output_file = f"Param_and_cli/results/performance_comparison.json"
         
         output_path = Path(output_file)
         with open(output_path, "w") as f:
@@ -352,17 +352,14 @@ def main():
     
     # Configuration
     models_to_test = [
-        ("mistral-small:22b","mistral-small:22b"),
         ("mistral-nemo","mistral-nemo"),
-        ("gemma2","gemma2"),
-        ("qwen3-vl","qwen3-vl"),
-        ("deepseek-r1","deepseek-r1"),
+        ("qwen3","qwen3"),
         ("gemma3:12b","gemma3:12b"),
-        ("yi", "yi (34B)"),
-        ("gpt-oss:120b","GPT-OSS-120"),
-        ("gpt-oss","GPT-OSS"),
-        ("gemma","Gemma"),
-        ("dolphin-mixtral","Dolphin")
+        ("gpt-oss:120b","GPT-OSS"),
+        ("phi4","phi4"),
+        ("deepseek-r1:70b","deepseek-r1:70b"),
+        ("llama3.2","llama3.2"),
+        ("nemotron-mini","nemotron-mini")
     ]
     
     print("="*100)
@@ -372,7 +369,7 @@ def main():
     print(f"Test cases: 50 realistic CLI scenarios with parameter specifications\n")
     
     # Run comparison
-    comparator = AdvancedPerformanceComparison("Param_and_cli/queries/benchmark_queries_with_params_simplified.json")
+    comparator = AdvancedPerformanceComparison("Param_and_cli/queries/missingparam.json")
     results = comparator.run_comparison(models_to_test)
     
     # Save results
@@ -384,8 +381,6 @@ def main():
     
     print("\n✓ Comparison complete!")
     print(f"✓ Results saved to: {output_file}")
-    print("\nTo visualize results further, use:")
-    print("  python3 analyze_params_comparison.py")
 
 
 if __name__ == "__main__":

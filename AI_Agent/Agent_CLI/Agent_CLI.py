@@ -1,16 +1,121 @@
 #!/usr/bin/env python-real
 
+import re
+from difflib import SequenceMatcher
 import json
 import subprocess
 import os
 import argparse
 import logging
+import ollama
 from Agent_CLI_utils.utils import (load_manifest,build_tool_spec,extract_parameters,build_cli_args)
 from Agent_CLI_utils.parameter_extraction_improved import ImprovedParameterExtractor
 from Agent_CLI_utils.parameter_validator import ParameterValidator,ValidationReport
 
 
 logger = logging.getLogger(__name__)
+
+def get_tool_def(manifest, tool_name: str):
+    for tool in manifest.get("scripts", []):
+        if tool.get("name") == tool_name:
+            return tool
+    return None
+
+def complete_with_defaults(manifest, tool_name: str,params:dict):
+    tool = get_tool_def(manifest, tool_name)
+    if not tool:
+        return []
+    defaults = {p.get("name",""):p.get("default","") for p in tool.get("parameters", []) if not p.get("required", False) and "default" in p}
+    for name,default in defaults.items():
+        if name not in params:
+            params[name]= default
+    
+    return params
+
+def _tokenize(text: str):
+    if not text:
+        return []
+    return re.findall(r"[a-z0-9_]+", text.lower())
+
+def _sim(a: str, b: str) -> float:
+    if not a or not b:
+        return 0.0
+    return SequenceMatcher(None, a.lower(), b.lower()).ratio()
+
+def retrieve_candidates(manifest: dict, user_text: str, k: int = 5):
+    """
+    Retourne top-k scripts candidats (dicts du manifest) via scoring local.
+    """
+    scripts = manifest.get("scripts", [])
+    t = user_text.lower()
+    toks = set(_tokenize(user_text))
+
+    scored = []
+    for s in scripts:
+        name = s.get("name", "")
+        desc = s.get("description", "")
+        tags = [str(x).lower() for x in (s.get("tags") or [])]
+
+        score = 0.0
+
+        # Match nom direct
+        if name and name.lower() in t:
+            score += 10.0
+
+        # Tags
+        for tag in tags:
+            if tag in toks:
+                score += 3.0
+            elif tag in t:  # match substring
+                score += 1.5
+
+        # Desc tokens (léger)
+        desc_toks = set(_tokenize(desc))
+        score += 0.25 * len(desc_toks.intersection(toks))
+
+        # Similarité “fuzzy” entre requête et nom/desc (petit bonus)
+        score += 2.0 * _sim(user_text, name)
+        score += 1.0 * _sim(user_text, desc[:120])
+
+        scored.append((score, s))
+
+    scored.sort(key=lambda x: x[0], reverse=True)
+    top = [s for _, s in scored[:k]]
+    return top
+
+def build_candidates_block(candidates):
+    """
+    Construit un bloc compact (5 lignes) pour le routeur.
+    """
+    lines = []
+    for i, s in enumerate(candidates, 1):
+        name = s.get("name", "")
+        desc = (s.get("description", "") or "").strip()
+        desc = re.sub(r"\s+", " ", desc)
+        desc = desc[:140]  # TRÈS important: court
+        tags = s.get("tags") or []
+        tags = [str(x) for x in tags[:8]]  # max 8 tags
+        tag_str = ", ".join(tags)
+        lines.append(f"{i}) {name} — {desc} | tags: {tag_str}")
+    return "\n".join(lines)
+
+def build_candidates_block_ask(candidates):
+    """
+    Construit un bloc compact (5 lignes) pour le routeur.
+    """
+    lines = []
+    for i, s in enumerate(candidates, 1):
+        name = s.get("name", "")
+        desc = (s.get("description", "") or "").strip()
+        desc = re.sub(r"\s+", " ", desc)
+        desc = desc[:140]  # TRÈS important: court
+        tags = s.get("tags") or []
+        tags = [str(x) for x in tags[:8]]  # max 8 tags
+        tag_str = ", ".join(tags)
+        params = s.get("parameters","")
+        lines.append(f"{i}) {name} — {desc} | tags: {tag_str}| parameters:{params}")
+    return "\n".join(lines)
+
 
 def main(input):
     module_dir = os.path.dirname(__file__)
@@ -23,113 +128,105 @@ def main(input):
 
     if input.modeagent == "Agent (Automated)":
 
-        model = os.environ.get("ROUTER_MODEL", "gemma2:latest")
+        folder_list_str = "\n".join(input.folders.split(","))
 
-        few_shots = """
-            Example 1 (confident):
-            USER: "resize ./in to 800x600 and save to ./out"
-            LLM:
-            {"tool":"resize_images","confidence":0.78,"reason":"Matches resize and dimensions keywords"}
+        folders_context = f"""
+        FOLDERS_CONTEXT:
+        {folder_list_str}
 
-            Example 2 (partial info):
-            USER: "sum the total column from data.csv"
-            LLM:
-            {"tool":"sum_csv""confidence":0.72,"reason":"CSV summation task"}
+        Rules:
+        - Treat FOLDERS_CONTEXT as the source of truth for paths.
+        - If a required path parameter is missing, try to infer it from FOLDERS_CONTEXT.
+        - If multiple candidates exist, pick the most specific match and explain briefly in 'reason'.
+        """.strip()
 
-            Example 3 (uncertain):
-            USER: "create a business report"
-            LLM:
-            {"tool": null,"confidence": 0.20, "reason":"No tool matches this request","candidates":[{"name":"sum_csv","score":0.22},{"name":"scrape_site","score":0.18}]}
-            """.strip()
-        
-        system_prompt = f"""
-You are a tool router. Your only output must be a single JSON object on one line.  
+        modele = os.environ.get("ROUTER_MODEL", "gemma2:latest")
+
+        candidates = retrieve_candidates(manifest, input.prompt, k=3)
+        candidates_block = build_candidates_block(candidates)
+
+        router_system = """
+You are a tool router. Output ONLY one JSON object.
+Schema:
+{"tool": string|null, "confidence": number, "reason": string}
 
 Rules:
-- Choose exactly one 'tool' from the provided list that solves the user request.
-- Output MUST strictly follow the JSON structure described below.
-- If unsure, return "tool": null and suggest up to 3 'candidates' with a 'score'.
-- Never output text outside JSON. No comments, no explanations outside fields.
+- Choose tool ONLY from the candidate list provided by the user message.
+- If none match, set tool = null and confidence <= 0.4.
+- Do not invent tool names.
+- Keep reason short (max 1 sentence).
+""".strip()
 
-Available Tools and their purposes:
-{tools}
+        router_user = f"""
+USER_REQUEST:
+{input.prompt}
 
-Few-shot examples:
-{few_shots}
-
-Strict output format (must be followed exactly):
-- Always output a single JSON object with keys: "tool", "confidence", "reason".
-- Optionally include "candidates" (list of  ["name", "score" ]) when "tool" is null or when you want to suggest alternatives.
-
-"""
-        
-        payload =f"""system prompt: {system_prompt}
-                    user prompt: {input.prompt}"""
+CANDIDATES (choose exactly one name from this list):
+{candidates_block}
+""".strip()
 
         try:
-            # Appel subprocess → ollama CLI
-            result = subprocess.run(
-                ["ollama", "run", model],
-                input=payload,
-                text=True,
-                capture_output=True
+            response = ollama.chat(
+                model=modele,
+                messages=[
+                    {"role": "system", "content": router_system},
+                    {"role": "user", "content": router_user}
+                ],
+                format="json"
             )
-        except FileNotFoundError:
-            raise RuntimeError("Ollama CLI introuvable. Installez-le et assurez-vous que `ollama` est dans le PATH.")
+        except Exception as e:
+            raise RuntimeError(f"Router error: {e}")
 
-        # Le contenu retourné par la CLI est déjà du texte généré
-        response = result.stdout.strip()
-        # STEP 2: Extraire les paramètres
-
-        try:
-            json_start = response.find('{')
-            json_end = response.rfind('}') + 1
-            if json_start >= 0 and json_end > json_start:
-                json_str = response[json_start:json_end]
-                data = json.loads(json_str)
-            else:
-                logger.warning(f"No JSON in response: {response}")
-                return None, 0.0, "No JSON found"
-        except json.JSONDecodeError as e:
-            logger.warning(f"JSON decode error: {e}, response: {response}")
-            return None, 0.0, str(e)
-        
+        data = json.loads(response["message"]["content"])
         selected_tool = data.get("tool")
         confidence = float(data.get("confidence", 0.0))
 
-        params, param_conf, missing_required = extract_parameters(manifest, selected_tool, input.prompt,improved_extractor,parameter_validator,model)
+        if selected_tool and selected_tool!="null" and selected_tool!="None":
+            new_prompt = f"""{input.prompt}\n\n{folders_context}"""
 
-        list_name = ["output_folder","output_dir","output","output_path"]
-        for name in list_name:
-            if name in params:
-                params[name] = input.outputfolder
-            if name in missing_required:
-                params[name] = input.outputfolder
-                missing_required.remove(name)
+            params, param_conf, missing_required,removed = extract_parameters(manifest, selected_tool, new_prompt,improved_extractor,parameter_validator,modele)
 
-        cli_args = build_cli_args(selected_tool, params, manifest)
-        
-        # Préparer la sortie
-        output = {
-            "status": "ready",
-            "tool": selected_tool,
-            "tool_confidence": round(confidence, 3),
-            "parameters_confidence": round(param_conf, 3) if params else 0.0,
-            "parameters": params,
-            "missing_required": missing_required,
-            "command": cli_args,
-        }
-        print(json.dumps(output))
+            params = complete_with_defaults(manifest,selected_tool,params)
+
+            if removed:
+                params[removed[0]] = input.temp_folder
+                missing_required.remove(removed[0])
+
+            cli_args = build_cli_args(selected_tool, params, manifest)
+            
+            output = {
+                "tool": selected_tool,
+                "tool_confidence": round(confidence, 3),
+                "parameters_confidence": round(param_conf, 3) if params else 0.0,
+                "parameters": params,
+                "missing_required": missing_required,
+                "command": cli_args,
+            }
+            print(json.dumps(output))
+
+        else:
+
+            output = {
+                "tool": None,
+                "tool_confidence": None,
+                "parameters_confidence": None,
+                "parameters": None,
+                "missing_required": None,
+                "command": None,
+            }
+            print(json.dumps(output))
 
     else:
-        model = os.environ.get("ROUTER_MODEL", "gemma:latest")
+        candidates = retrieve_candidates(manifest, input.prompt, k=3)
+        candidates_block = build_candidates_block_ask(candidates)
+        modele = os.environ.get("ROUTER_MODEL", "gemma:latest")
 
         system_prompt = f"""You are an expert medical image analysis consultant specializing in dental and orthodontic imaging.
 
 Your role is to provide methodology advice and workflow recommendations for image analysis projects.
 
 Available Tools and their purposes:
-{tools}
+{candidates_block}
 
 When answering questions:
 1. Recommend the most appropriate tools from the available set
@@ -139,23 +236,21 @@ When answering questions:
 5. Mention any important parameters or settings
 
 Keep your response focused and practical."""
-
-        payload =f"""system prompt: {system_prompt}
-                    user prompt: {input.prompt}"""
-
+        
         try:
-            # Appel subprocess → ollama CLI
-            result = subprocess.run(
-                ["ollama", "run", model],
-                input=payload,
-                text=True,
-                capture_output=True
+            response = ollama.chat(
+                model=modele,
+                messages=[
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": input.prompt}
+                ]
             )
-        except FileNotFoundError:
-            raise RuntimeError("Ollama CLI introuvable. Installez-le et assurez-vous que `ollama` est dans le PATH.")
+        except Exception as e:
+            raise RuntimeError(f"Router error: {e}")
 
-        # Le contenu retourné par la CLI est déjà du texte généré
-        output = result.stdout.strip()
+        output = response["message"]["content"].strip()
+        output = output.replace("*","")
+        output = output.replace("#","")
         print(output)
 
 
@@ -163,9 +258,13 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
     parser.add_argument('prompt',type=str)
-    parser.add_argument("inputfolder",type=str)
-    parser.add_argument('outputfolder',type=str)
+    parser.add_argument('folders',type=str)
     parser.add_argument('modeagent',type=str)
+    parser.add_argument('temp_folder',type=str)
 
-    args = parser.parse_args()
+    try:
+        args = parser.parse_args()
+    except SystemExit:
+        print("Erreur de parsing : Vérifiez le nombre d'arguments envoyés !")
+        raise
     main(args)

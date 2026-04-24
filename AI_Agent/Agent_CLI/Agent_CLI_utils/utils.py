@@ -48,51 +48,50 @@ def build_tool_spec(manifest):
         tools.append({
             "name": s["name"],
             "description": s.get("description",""),
-            "params": sorted(list(params)),           # logical names (not "--flag")
+            # "params": sorted(list(params)),           # logical names (not "--flag")
             "required_params": sorted(list(required_params)),
-            "path": s["path"],
+            # "path": s["path"],
             "tags": s.get("tags", []),
-            "priority": s.get("priority", 0),
+            # "priority": s.get("priority", 0),
         })
     return tools
 
 def extract_parameters(manifest: Dict, tool_name: str, user_text: str,improved_extractor:ImprovedParameterExtractor,parameter_validator:ParameterValidator,model) -> Tuple[Dict[str, Any], float, List[str]]:
-    
-    # Get tool spec
+    import ollama
+
     scripts = {s["name"]: s for s in manifest.get("scripts", [])}
     tool_spec = scripts.get(tool_name)
     if not tool_spec:
-        print(f"Tool {tool_name} not found in manifest")
+        # print(f"Tool {tool_name} not found in manifest")
         return {}, 0.0, []
+    
+    name_temp = ["temp_fold","tmp_folder","temp_folder","log_path","logPath"]
+
+    tool_spec_clear = tool_spec.copy()
+
+    params = tool_spec.get("parameters", [])
+    tool_spec_clear["parameters"] = [p for p in params if p.get("name") not in name_temp]
+
+    removed = [p["name"] for p in tool_spec.get("parameters", [])if p.get("name") in name_temp]
     
     try:
         # Créer le prompt avec few-shot examples
-        prompt = improved_extractor.build_prompt(tool_name, user_text)
-        payload =f"""system prompt: You are a parameter extraction expert. Output ONLY valid JSON on one line.
-                    user prompt: {prompt}"""
+        prompt = improved_extractor.build_prompt(tool_name, user_text,tool_spec_clear)
+        router_system ="You are a parameter extraction expert. Output ONLY valid JSON on one line."
+
         try:
-            # Appel subprocess → ollama CLI
-            result = subprocess.run(
-                ["ollama", "run", model],
-                input=payload,
-                text=True,
-                capture_output=True
+            response = ollama.chat(
+                model=model,
+                messages=[
+                    {"role": "system", "content": router_system},
+                    {"role": "user", "content": prompt}
+                ],
+                format="json"
             )
-            response = result.stdout.strip()
-        except FileNotFoundError:
-            raise RuntimeError("Ollama CLI introuvable. Installez-le et assurez-vous que `ollama` est dans le PATH.")
-        
-        # Parser JSON
-        try:
-            data = json.loads(response)
-        except json.JSONDecodeError:
-            json_start = response.find('{')
-            json_end = response.rfind('}') + 1
-            if json_start >= 0 and json_end > json_start:
-                data = json.loads(response[json_start:json_end])
-            else:
-                raise json.JSONDecodeError("No JSON found", response, 0)
-        
+        except Exception as e:
+            raise RuntimeError(f"Router error: {e}")
+
+        data = json.loads(response["message"]["content"])
         extracted_raw = data.get("extracted", {})
         confidence = float(data.get("confidence", 0.0))
         
@@ -100,22 +99,16 @@ def extract_parameters(manifest: Dict, tool_name: str, user_text: str,improved_e
         extracted_converted, conversion_errors = improved_extractor.convert_types(
             extracted_raw, tool_spec
         )
-        if conversion_errors:
-            print(f"Conversion errors: {conversion_errors}")
         
         # ÉTAPE 2: Validation
         validation_result = parameter_validator.validate(tool_name, extracted_converted)
-        
-        if validation_result["valid"]:
-            report = ValidationReport.generate_report(tool_name, validation_result)
-            print(report, file=sys.stderr)
         
         # Retourner les paramètres validés
         final_params = validation_result["params"]
         final_confidence = confidence if validation_result["valid"] else confidence * 0.6
         missing_required = validation_result["missing_required"]
         
-        return final_params, final_confidence, missing_required
+        return final_params, final_confidence, missing_required,removed
     
     except Exception as e:
         print(f"IMPROVED extraction failed, falling back to simple: {e}")

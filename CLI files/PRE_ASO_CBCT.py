@@ -61,10 +61,9 @@ def ResampleImage(image, transform):
 
 def main(args):
 
-    input_dir, out_dir, smallFOV, isDCMInput = (
+    input_dir, out_dir, isDCMInput = (
         os.path.normpath(args.input[0]),
         os.path.normpath(args.output_folder[0]),
-        args.SmallFOV[0] == "true",
         args.DCMInput[0] == "true",
     )
 
@@ -127,7 +126,6 @@ if __name__ == "__main__":
     parser.add_argument("input", nargs=1)
     parser.add_argument("output_folder", nargs=1)
     parser.add_argument("model_folder", nargs=1)
-    parser.add_argument("SmallFOV", nargs=1)
     parser.add_argument("temp_folder", nargs=1)
     parser.add_argument("DCMInput", nargs=1)
 

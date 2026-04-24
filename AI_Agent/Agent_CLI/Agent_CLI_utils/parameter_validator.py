@@ -8,6 +8,7 @@ import json
 import yaml
 from typing import Dict, List, Tuple, Any, Optional
 from pathlib import Path
+from collections.abc import Sequence
 
 
 class ParameterValidator:
@@ -290,29 +291,28 @@ class ParameterValidator:
     @staticmethod
     def _convert_list(value, encode: str) -> Any:
         """Convertir en liste selon l'encodage"""
-        
-        if isinstance(value, list):
-            return value
-        
+
+        # ✅ accept list-like (ObservedList, tuple, etc.) but not strings
+        if isinstance(value, Sequence) and not isinstance(value, (str, bytes, dict)):
+            return [str(x) for x in list(value)]
+
         if isinstance(value, str):
             s = value.strip()
-            
-            # Si python_literal, retourner as-is
+
             if encode == "python_literal":
-                return s  # "[1.0, 0.3]"
-            
-            # Parser selon le séparateur
+                return s
+
             if encode == "space_separated":
                 items = s.split()
-            else:  # comma_no_brackets, comma_separated
-                # Retirer les crochets si présents
+            else:
                 if s.startswith("[") and s.endswith("]"):
                     s = s[1:-1]
                 items = [x.strip() for x in s.split(",")]
-            
+
             return items
-        
+
         raise ValueError(f"Cannot convert '{value}' to list")
+
     
     @staticmethod
     def _convert_path(value) -> str:

@@ -139,15 +139,20 @@ def delete_folder(folder_path):
 
 def main():
     parser = argparse.ArgumentParser(description="Run multiple Python scripts with arguments")
-    parser.add_argument('folder_general', type=str, help="Folder general where to make all the output")
+    parser.add_argument('output_folder', type=str, help="Folder general where to make all the output")
     parser.add_argument('mri_folder', type=str, help="Folder containing original MRI images.")
     parser.add_argument('cbct_folder', type=str, help="Folder containing original CBCT images.")
     parser.add_argument('cbct_label2', type=str, help="Folder containing CBCT masks.")
-    parser.add_argument('normalization', type=str, help="Folder containing CBCT masks.")
-    parser.add_argument('tempo_fold', type=str, help="Indicate to keep the temporary fold or not")
     args = parser.parse_args()
     
-    mri_min_norm, mri_max_norm, mri_lower_p, mri_upper_p, cbct_min_norm, cbct_max_norm, cbct_lower_p, cbct_upper_p = extract_values(args.normalization)
+    mri_min_norm = 0
+    mri_max_norm = 100 
+    mri_lower_p = 0
+    mri_upper_p = 100 
+    cbct_min_norm = 0 
+    cbct_max_norm = 75
+    cbct_lower_p = 10
+    cbct_upper_p = 95
     
     total_steps = 6
     current_step = 0
@@ -186,16 +191,15 @@ def main():
     sys.stdout.flush()
     
     
-    if args.tempo_fold=="false":
-        delete_folder(folder_mri_inverse)
-        delete_folder(input_path_norm_mri)
-        delete_folder(os.path.dirname(input_path_norm_mri))
-        delete_folder(input_path_mri_norm_mask)
-        delete_folder(os.path.dirname(input_path_mri_norm_mask))
-        delete_folder(output_path_norm_cbct)
-        delete_folder(os.path.dirname(output_path_norm_cbct))
-        delete_folder(input_path_cbct_norm_mask)
-        delete_folder(os.path.dirname(input_path_cbct_norm_mask))
+    delete_folder(folder_mri_inverse)
+    delete_folder(input_path_norm_mri)
+    delete_folder(os.path.dirname(input_path_norm_mri))
+    delete_folder(input_path_mri_norm_mask)
+    delete_folder(os.path.dirname(input_path_mri_norm_mask))
+    delete_folder(output_path_norm_cbct)
+    delete_folder(os.path.dirname(output_path_norm_cbct))
+    delete_folder(input_path_cbct_norm_mask)
+    delete_folder(os.path.dirname(input_path_cbct_norm_mask))
     
     
 

@@ -54,11 +54,11 @@ from ALI_CBCT_utils import (
 def main(input):
     print("Reading : ",args.input)
     
-    scale_spacing = ast.literal_eval(args.spacing)
-    speed_per_scale = ast.literal_eval(args.speed_per_scale)
-    agent_FOV = ast.literal_eval(args.agent_FOV)
+    scale_spacing = [1,0.3]
+    speed_per_scale = [1,1]
+    agent_FOV = [64,64,64]
     lm_type = ast.literal_eval(f"[{args.lm_type}]")
-    spawn_radius = int(args.spawn_radius)
+    spawn_radius = 10
     print("Selected spacings : ", scale_spacing)
 
     # If input in DICOM Format --> CONVERT THEM INTO NIFTI
@@ -238,10 +238,6 @@ if __name__ == "__main__":
     parser.add_argument("output_dir", type=str, help="Output directory")
     parser.add_argument("temp_fold", type=str, help="Temporary folder")
     parser.add_argument("DCMInput", type=str, help="Is the input in DICOM format")
-    parser.add_argument("spacing", type=str, default="[1,0.3]", help="Spacing of the images")
-    parser.add_argument("speed_per_scale", type=str, default="[1,1]", help="Speed of the agent per scale")
-    parser.add_argument("agent_FOV", type=str, default="[64,64,64]", help="Field of view of the agent")
-    parser.add_argument("spawn_radius", type=str, default="10", help="Spawn radius of the agent")
     
     args = parser.parse_args()
     

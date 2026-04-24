@@ -59,7 +59,7 @@ def main(args):
             if not os.path.exists(dir_json):
                 os.makedirs(dir_json)
             json_path = os.path.join(
-                dir_json, patient + "_lm_" + args.add_inname[0] + ".mrk.json"
+                dir_json, patient + "_lm_" + "Or" + ".mrk.json"
             )
 
             if not os.path.exists(json_path):
@@ -71,13 +71,13 @@ def main(args):
                 os.makedirs(dir_scan)
 
             file_outpath = os.path.join(
-                dir_scan, patient + "_" + args.add_inname[0] + ".nii.gz"
+                dir_scan, patient + "_" + "Or" + ".nii.gz"
             )
             if not os.path.exists(file_outpath):
                 sitk.WriteImage(output, file_outpath)
                 
             transform_outpath = os.path.join(
-                dir_scan, patient + "_" + args.add_inname[0] + "_transform.tfm"
+                dir_scan, patient + "_" + "Or" + "_transform.tfm"
             )
             if not os.path.exists(transform_outpath):
                 sitk.WriteTransform(TransformSITK, transform_outpath)
@@ -106,7 +106,6 @@ if __name__ == "__main__":
     parser.add_argument("input", nargs=1)
     parser.add_argument("gold_folder", nargs=1)
     parser.add_argument("output_folder", nargs=1)
-    parser.add_argument("add_inname", nargs=1)
     parser.add_argument("list_landmark", nargs=1)
 
     args = parser.parse_args()

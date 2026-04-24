@@ -1,7 +1,3 @@
-defaults:
-  threshold: 0.45
-  topk: 3
-
 scripts:
   - name: ali_cbct
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/ALI_CBCT.py
@@ -10,17 +6,6 @@ scripts:
     priority: 10
 
     cli_style: positional
-    positional_order:
-      - input
-      - dir_models
-      - lm_type
-      - output_dir
-      - temp_fold
-      - DCMInput
-      - spacing
-      - speed_per_scale
-      - agent_FOV
-      - spawn_radius
 
     parameters:
       - name: input
@@ -55,29 +40,6 @@ scripts:
         encode: lower_str_bool
         description: "Whether input is DICOM format (true) or not (false)"
 
-      - name: spacing
-        type: list[float]
-        default: [1.0, 0.3]
-        encode: python_literal
-        description: "List of spacing (mm) to use, ex. [1,0.3]."
-
-      - name: speed_per_scale
-        type: list[float]
-        default: [1, 1]
-        encode: python_literal
-        description: "Speed per scale of the agent, ex. [1,1]."
-
-      - name: agent_FOV
-        type: list[int]
-        default: [64, 64, 64]
-        encode: python_literal
-        description: "Field of View of the agent (voxels), ex. [64,64,64]."
-
-      - name: spawn_radius
-        type: int
-        default: 10
-        description: "Spawn radius of the agent (voxels)."
-
     examples:
       - 'ali cbct on a .nii : "./ALI_CBCT.nii.gz" "models/" "1,2,3" "./out" "./tmp" false "[1,0.3]" "[1,1]" "[64,64,64]" 10'
       - 'ali cbct on DICOM folder : "./patient01_dcm/" "models/" "LM1,LM2" "./out" "./tmp" true "[0.6,0.3]" "[1,1]" "[64,64,64]" 10'
@@ -90,7 +52,7 @@ scripts:
 
     cli_style: positional
     parameters:
-      - name: input_surface
+      - name: input
         type: path
         required: true
         description: "Input intraoral scan surface file (STL/VTK/OFF)."
@@ -130,27 +92,27 @@ scripts:
 
     cli_style: positional
     parameters:
-      - name: input_folder
+      - name: inputVolume
         type: path
         required: true
         description: "Folder containing CBCT scans to segment."
+
+      - name: modelDirectory
+        type: path
+        required: true
+        description: "Folder containing nnUNet model checkpoints."
+
+      - name: skullStructure
+        type: str
+        required: true
+        description: " List of the structures to segment"
 
       - name: output_folder
         type: path
         required: true
         description: "Output folder for segmented structures."
 
-      - name: models_folder
-        type: path
-        required: true
-        description: "Folder containing nnUNet model checkpoints."
-
-      - name: model_size
-        type: str
-        default: "LARGE"
-        description: "Model size: LARGE (full anatomy) or SMALL (detailed structures)."
-
-      - name: log_path
+      - name: temp_fold
         type: path
         required: true
         description: "Path to log file."
@@ -183,32 +145,16 @@ scripts:
         required: true
         description: "Output folder for registered images and transforms."
 
-      - name: add_name
-        type: str
-        default: ""
-        description: "Additional suffix for output files."
-
       - name: DCMInput
         type: bool
         default: false
         encode: lower_str_bool
         description: "Whether input is DICOM format."
 
-      - name: SegmentationLabel
-        type: int
-        default: 0
-        description: "Segmentation label to use for registration (0 = none)."
-
       - name: temp_folder
         type: path
         required: true
         description: "Temporary folder for intermediate files."
-
-      - name: ApproxReg
-        type: bool
-        default: false
-        encode: lower_str_bool
-        description: "Use approximation-based registration."
 
       - name: mask_folder_t1
         type: path
@@ -233,30 +179,25 @@ scripts:
         required: true
         description: "Folder containing follow-up (T2) intraoral scan surfaces."
 
-      - name: model
-        type: path
-        required: true
-        description: "Path to segmentation refinement model."
-
       - name: output
         type: path
         required: true
         description: "Output folder for registered surfaces."
 
-      - name: suffix
-        type: str
-        default: "_reg"
-        description: "Suffix for output files."
-
-      - name: areg_mode
-        type: str
-        default: "Auto_IOS"
-        description: "Registration mode (e.g., Auto_IOS)."
+      - name: model
+        type: path
+        required: true
+        description: "Path to segmentation refinement model."
 
       - name: log_path
         type: path
         required: true
         description: "Log file path."
+
+      - name: areg_mode
+        type: str
+        default: "Auto_IOS"
+        description: "Registration mode (e.g., Auto_IOS)."
 
   - name: autocrop3d
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/AutoCrop3D_CLI.py
@@ -281,14 +222,9 @@ scripts:
         required: true
         description: "Output folder for cropped volumes."
 
-      - name: suffix
-        type: str
-        default: "_crop"
-        description: "Suffix for output files."
-
       - name: box_Size
-        type: list[float]
-        default: [50, 50, 50]
+        type: bool
+        default: true
         encode: python_literal
         description: "ROI box size in physical coordinates."
 
@@ -305,25 +241,40 @@ scripts:
 
     cli_style: positional
     parameters:
-      - name: file_path
+      - name: input_patient
         type: path
         required: true
         description: "Input scan or surface file/folder."
 
-      - name: matrix_path
+      - name: input_matrix
         type: path
         required: true
         description: "Folder containing transformation matrices (.tfm, .h5)."
+
+      - name: reference_file
+        type: path
+        required: true
+        description: "Reference file for transformed files."
+      
+      - name: fromAreg
+        type: bool
+        default: false
+        description: "bool to know if this module is lauch after areg"
 
       - name: output_folder
         type: path
         required: true
         description: "Output folder for transformed files."
 
-      - name: add_name
-        type: str
-        default: "_transformed"
-        description: "Suffix for output files."
+      - name: log_path
+        type: path
+        required: true
+        description: "Path to log file."
+
+      - name: is_seg
+        type: bool
+        default: false
+        description: "Bool to know if the input scan is a segmentation"
 
   - name: batchdentalseg
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/BATCHDENTALSEG.py
@@ -361,25 +312,20 @@ scripts:
 
     cli_style: ui_module
     parameters:
-      - name: input_folder
+      - name: input_path
         type: path
         required: true
         description: "Folder containing CBCT scans."
-
-      - name: output_folder
-        type: path
-        required: true
-        description: "Output folder for segmentations."
 
       - name: model_folder
         type: path
         required: true
         description: "Folder containing Mask-RCNN model."
 
-      - name: use_gpu
-        type: bool
-        default: true
-        description: "Use GPU acceleration if available."
+      - name: output_dir
+        type: path
+        required: true
+        description: "Output folder for segmentations."
 
   - name: docshapeaxi
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/DOCShapeAXI_CLI.py
@@ -389,25 +335,45 @@ scripts:
 
     cli_style: positional
     parameters:
-      - name: input_surfaces
+      - name: input_dir
         type: path
         required: true
         description: "Folder containing surface meshes (.vtk, .stl, .off)."
 
-      - name: model_path
-        type: path
-        required: true
-        description: "Path to trained ShapeAXI model."
-
-      - name: output_folder
+      - name: output_dir
         type: path
         required: true
         description: "Output folder for analysis results."
 
-      - name: compute_gradcam
-        type: bool
-        default: false
-        description: "Compute and save GradCAM attention maps."
+      - name: data_type
+        type: str
+        required: true
+        description: "Path to trained ShapeAXI model."
+
+      - name: task
+        type: str
+        required: true
+        description: "Path to trained ShapeAXI model."
+      
+      - name: model
+        type: str
+        required: true
+        description: "Name of the model used"
+
+      - name: nn
+        type: str
+        required: true
+        description: "Model type"
+
+      - name: num_classes
+        type: int
+        required: true
+        description: "Number of classes."
+      
+      - name: log_path
+        type: path
+        required: true
+        description: "Log file path."
 
   - name: flexreg
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/FlexReg_CLI.py
@@ -450,11 +416,6 @@ scripts:
         required: true
         description: "Output folder for dashboard HTML."
 
-      - name: log_path
-        type: path
-        required: true
-        description: "Log file path."
-
   - name: medx_summarize
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/MedX_Summarize.py
     description: "MedX Summarize - Automatic medical text summarization using transformers. Generates concise clinical summaries from patient notes (PDF, DOCX, TXT) using transformer-based NLP models for quick clinical review."
@@ -463,20 +424,20 @@ scripts:
 
     cli_style: positional
     parameters:
-      - name: notes_folder
+      - name: input_notes
         type: path
         required: true
         description: "Folder containing patient notes (PDF/DOCX/TXT)."
+
+      - name: input_model
+        type: str
+        default: "t5-base"
+        description: "Huggingface model for summarization."
 
       - name: output_folder
         type: path
         required: true
         description: "Output folder for summaries."
-
-      - name: model_name
-        type: str
-        default: "t5-base"
-        description: "Huggingface model for summarization."
 
       - name: log_path
         type: path
@@ -506,38 +467,34 @@ scripts:
         required: true
         description: "Output folder for approximated images."
 
-  # - name: mri2cbct_reg
-  #   path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/MRI2CBCT_REG.py
-  #   description: "MRI to CBCT image registration with intensity normalization. Registers MRI volumes to CBCT reference frames using deformable registration with automatic intensity normalization for joint imaging analysis."
-  #   tags: [mri, cbct, registration, normalization, segmentation, multimodal, intensity, deformable]
-  #   priority: 15
+  - name: mri2cbct_reg
+    path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/MRI2CBCT_REG.py
+    description: "MRI to CBCT image registration with intensity normalization. Registers MRI volumes to CBCT reference frames using deformable registration with automatic intensity normalization for joint imaging analysis."
+    tags: [mri, cbct, registration, normalization, segmentation, multimodal, intensity, deformable]
+    priority: 15
 
-  #   cli_style: positional
-  #   parameters:
-  #     - name: mri_folder
-  #       type: path
-  #       required: true
-  #       description: "Folder containing MRI scans."
+    cli_style: positional
+    parameters:
 
-  #     - name: cbct_folder
-  #       type: path
-  #       required: true
-  #       description: "Folder containing CBCT scans."
+      - name: output_folder
+        type: path
+        required: true
+        description: "Output folder for registered images."
 
-  #     - name: output_folder
-  #       type: path
-  #       required: true
-  #       description: "Output folder for registered images."
+      - name: mri_folder
+        type: path
+        required: true
+        description: "Folder containing MRI scans."
 
-  #     - name: upper_percentile
-  #       type: float
-  #       default: 0.95
-  #       description: "Upper percentile for normalization."
+      - name: cbct_folder
+        type: path
+        required: true
+        description: "Folder containing CBCT scans."
 
-  #     - name: lower_percentile
-  #       type: float
-  #       default: 0.01
-  #       description: "Lower percentile for normalization."
+      - name: cbct_label2
+        type: path
+        required: true
+        description: "Folder containing CBCT masks."
 
   - name: mri2cbct_lr_crop
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/MRI2CBCT_LR_CROP.py
@@ -580,6 +537,11 @@ scripts:
         required: true
         description: "Folder containing MRI scans."
 
+      - name: direction
+        type: str
+        default: "-1.0, 0.0, 0.0, 0.0, -1.0, 0.0, 0.0, 0.0, 1.0"
+        description: "New direction for the NIfTI files, specified as a comma-separated string of floats."
+
       - name: output_folder
         type: path
         required: true
@@ -598,25 +560,55 @@ scripts:
 
     cli_style: positional
     parameters:
-      - name: input_folder
+      - name: input_folder_MRI
         type: path
         required: true
-        description: "Folder containing scans to resample."
+        description: "Folder containing MRI scans to resample."
+
+      - name: input_folder_T2_MRI
+        type: path
+        required: true
+        description: "Folder containing MRI T2 scans to resample."
+
+      - name: input_folder_CBCT
+        type: path
+        required: true
+        description: "Folder containing CBCT scans to resample."
+
+      - name: input_folder_T2_CBCT
+        type: path
+        required: true
+        description: "Folder containing CBCT T2 scans to resample."
+      
+      - name: input_folder_Seg
+        type: path
+        required: true
+        description: "Folder containing Seg scans to resample."
+
+      - name: input_folder_T2_Seg
+        type: path
+        required: true
+        description: "Folder containing Seg T2 scans to resample."
 
       - name: output_folder
         type: path
         required: true
         description: "Output folder for resampled images."
 
-      - name: target_spacing
-        type: list[float]
-        default: [1.0, 1.0, 1.0]
+      - name: resample_size
+        type: list[int]
+        default: [443,443, 119]
         encode: python_literal
-        description: "Target spacing in mm (isotropic or anisotropic)."
+        description: "list for the resample size of the scans"
 
-      - name: interpolation
-        type: str
-        default: "linear"
+      - name: spacing
+        type: lsit[float]
+        default: [0.3,0.3,0.3]
+        description: "list for the spacing size of the scans"
+
+      - name: center
+        type: bool
+        default: false
         description: "Interpolation method: linear, nearest, etc."
 
   - name: mri2cbct_tmj_crop
@@ -637,15 +629,25 @@ scripts:
         required: true
         description: "Folder containing MRI scans."
 
-      - name: model_folder
+      - name: seg_folder
         type: path
         required: true
-        description: "Folder containing nnUNet TMJ segmentation model."
+        description: "Folder containing segmentations scans."
 
       - name: output_folder
         type: path
         required: true
         description: "Output folder for cropped TMJ regions."
+
+      - name: model_folder
+        type: path
+        required: true
+        description: "Folder containing nnUNet TMJ segmentation model."
+
+      - name: tmp_folder
+        type: path
+        required: true
+        description: "Log file path."        
 
   - name: pre_aso_cbct
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/PRE_ASO_CBCT.py
@@ -665,11 +667,15 @@ scripts:
         required: true
         description: "Output folder for preprocessed scans."
 
-      - name: SmallFOV
-        type: bool
-        default: false
-        encode: lower_str_bool
-        description: "Assume small field-of-view CBCT."
+      - name: model_folder
+        type: path
+        required: true
+        description: "Folder of the model."
+      
+      - name: temp_folder
+        type: path
+        required: true
+        description: "Log file path."
 
       - name: DCMInput
         type: bool
@@ -690,6 +696,11 @@ scripts:
         required: true
         description: "Folder containing intraoral scan surfaces."
 
+      - name: gold_folder
+        type: path
+        required: true
+        description: "Folder containing intraoral scan surfaces."
+
       - name: output_folder
         type: path
         required: true
@@ -700,6 +711,16 @@ scripts:
         required: true
         encode: comma_separated
         description: "List of teeth to process (comma separated)."
+
+      - name: occlusion
+        type: bool
+        required: true
+        description: "Bool to know if it is an occlusion"
+
+      - name: jaw
+        type: str
+        required: true
+        description: "'Upper' or 'Lower' whether or not the scan is a lower or upper jaw"
 
       - name: log_path
         type: path
@@ -735,11 +756,6 @@ scripts:
         encode: space_separated
         description: "Landmark names to use for registration."
 
-      - name: add_inname
-        type: str
-        default: "semi_aso"
-        description: "Suffix for output files."
-
   - name: semi_aso_ios
     path: /home/luciacev/Documents/AlexCodes/Agent/CLI files/SEMI_ASO_IOS.py
     description: "Semi-Automatic Segmentation Orientation for IOS using landmarks. Uses manually-placed anatomical landmarks on dental surfaces with ICP registration to establish canonical tooth and jaw coordinate frames for analysis."
@@ -768,6 +784,16 @@ scripts:
         required: true
         encode: comma_separated
         description: "Landmark names for registration."
+
+      - name: occlusion
+        type: bool
+        required: true
+        description: "Bool to know if it is an occlusion"
+
+      - name: jaw
+        type: str
+        required: true
+        description: "'Upper' or 'Lower' whether or not the scan is a lower or upper jaw"
 
       - name: log_path
         type: path

@@ -233,7 +233,7 @@ def main(args):
     print("Initializing temporary folder and output setup...", flush=True)
 
     tmp = args["temp_fold"]
-    base_output = args["output_folder"]
+    outdir = args["output_folder"]
     os.makedirs(tmp, exist_ok=True)
 
     print("Temporary folder and output setup complete.", flush=True)
@@ -267,12 +267,6 @@ def main(args):
         if ext == ".gz":
             base, ext2 = os.path.splitext(base)
             ext = ext2 + ext
-
-        # --- choice of output folder ---
-        if args.get("save_in_folder"):
-            outdir = os.path.join(base_output, f"{base}_{args['prediction_ID']}_SegOut")
-        else:
-            outdir = base_output
         os.makedirs(outdir, exist_ok=True)
 
         print(f"Output directory set to: {outdir}", flush=True)
@@ -343,29 +337,31 @@ def main(args):
         print("All predictions completed for this scan. Starting segmentation saving...", flush=True)
         spacing = list(sitk.ReadImage(volume_file).GetSpacing())
 
-        if "SEPARATE" in args["merge"] or len(prediction_segmentation) == 1:
+        if "SEPARATE" in "MERGE SEPARATE" or len(prediction_segmentation) == 1:
             print("Saving separate segmentations...", flush=True)
             for struct, mask in prediction_segmentation.items():
-                outfn = os.path.join(outdir, f"{base}_{args['prediction_ID']}_{struct}{ext}")
+                outfn = os.path.join(outdir, f"{base}_Seg_{struct}{ext}")
                 SaveSeg(
                     outfn, spacing, mask, volume_file,
                     os.path.join(tmp, "tmp.nii.gz"),
-                    outdir, tmp, args["genVtk"], args["vtk_smooth"], "LARGE"
+                    outdir, tmp, True, 5, "LARGE"
                 )
 
-        if "MERGE" in args["merge"] and len(prediction_segmentation) > 1:
+        merging_order = ["SKIN","CV","UAW","CB","MAX","MAND","CAN","RC","CBMASK","MANDMASK","MAXMASK"]
+
+        if "MERGE" in "MERGE SEPARATE" and len(prediction_segmentation) > 1:
             print("Merging segmentations...", flush=True)
             shape = next(iter(prediction_segmentation.values())).shape
             merged = np.zeros(shape, dtype=np.int16)
-            for struct in args["merging_order"]:
+            for struct in merging_order:
                 if struct in prediction_segmentation:
                     lbl = LABELS["LARGE"].get(struct, 1)
                     merged = np.where(prediction_segmentation[struct] == 1, lbl, merged)
-            outfn = os.path.join(outdir, f"{base}_{args['prediction_ID']}_MERGED{ext}")
+            outfn = os.path.join(outdir, f"{base}_Seg_MERGED{ext}")
             SaveSeg(
                 outfn, spacing, merged, volume_file,
                 os.path.join(tmp, "tmp.nii.gz"),
-                outdir, tmp, args["genVtk"], args["vtk_smooth"], "LARGE"
+                outdir, tmp, True, 5, "LARGE"
             )
 
         print(f"Segmentation saving completed for scan {scan_idx}/{scan_count}.", flush=True)
@@ -386,17 +382,9 @@ if __name__=="__main__":
     args = {
         "inputVolume":    argv[1],
         "modelDirectory": argv[2],
-        "skullStructure": argv[3],
-        "merge":          re.split(r'[, ]+', argv[4].strip()),  
-        "genVtk":         argv[5].lower()=="true",
-        "save_in_folder": argv[6].lower()=="true",
-        "output_folder":  argv[7],
-        "vtk_smooth":     int(argv[8]),
-        "prediction_ID":  argv[9],        
-        "temp_fold":      argv[10],
-        "isSegmentInput": argv[11].lower()=="true",
-        "isDCMInput":     argv[12].lower()=="true",
-        "merging_order":  ["SKIN","CV","UAW","CB","MAX","MAND","CAN","RC","CBMASK","MANDMASK","MAXMASK"],
+        "skullStructure": argv[3], 
+        "output_folder":  argv[4],     
+        "temp_fold":      argv[5],
     }
     print(args)
     main(args)

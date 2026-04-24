@@ -27,7 +27,7 @@ except ImportError:
     sys.exit(1)
 
 class ComprehensiveModelComparator:
-    def __init__(self, manifest_file="manifest.yaml", queries_file="Param_and_cli/queries/benchmark_queries_with_params_corrected.json"):
+    def __init__(self, manifest_file, queries_file):
         # Load manifest
         with open(manifest_file, "r") as f:
             self.manifest = yaml.safe_load(f)
@@ -61,7 +61,7 @@ class ComprehensiveModelComparator:
             # Parse ollama list output
             models = []
             for line in result.stdout.strip().split('\n')[1:]:  # Skip header
-                if line.strip():
+                if not "deep" in line.strip():
                     model_name = line.split()[0]
                     models.append(model_name)
             
@@ -192,7 +192,7 @@ class ComprehensiveModelComparator:
                         "query": query[:80],
                         "error": error_msg
                     })
-                    print(f"   [{i:2d}/20] ❌ ERROR: {error_msg[:60]}")
+                    print(f"   [{i:2d}/{len(self.test_cases)}] ❌ ERROR: {error_msg[:60]}")
                     continue
                 
                 # Parse output
@@ -206,7 +206,7 @@ class ComprehensiveModelComparator:
                         "error": error_msg,
                         "stderr": result.stderr[:200] if result.stderr else ""
                     })
-                    print(f"   [{i:2d}/20] ❌ EMPTY OUTPUT: {error_msg[:60]}")
+                    print(f"   [{i:2d}/{len(self.test_cases)}] ❌ EMPTY OUTPUT: {error_msg[:60]}")
                     continue
                 
                 try:
@@ -219,7 +219,7 @@ class ComprehensiveModelComparator:
                         "error": error_msg,
                         "stdout": result.stdout[:200] if result.stdout else ""
                     })
-                    print(f"   [{i:2d}/20] ❌ JSON ERROR: {error_msg[:60]}")
+                    print(f"   [{i:2d}/{len(self.test_cases)}] ❌ JSON ERROR: {error_msg[:60]}")
                     continue
                 
                 # Extract results
@@ -276,7 +276,7 @@ class ComprehensiveModelComparator:
                 tool_status = "✅" if tool_correct else "❌"
                 param_status = "✅" if is_perfect else f"{param_accuracy*100:.0f}%"
                 
-                print(f"\n   [{i:2d}/20] {tool_status} QUERY: {query[:65]}")
+                print(f"\n   [{i:2d}/{len(self.test_cases)}] {tool_status} QUERY: {query[:65]}")
                 print(f"           Expected Tool: {expected_tool:<20} | Got: {selected_tool:<20}")
                 if expected_params and extracted_params:
                     print(f"           Expected Params: {str(expected_params)[:60]}")
@@ -301,7 +301,7 @@ class ComprehensiveModelComparator:
                     "query": query[:80],
                     "error": error_msg
                 })
-                print(f"   [{i:2d}/20] ⏱️  TIMEOUT: {error_msg}")
+                print(f"   [{i:2d}/{len(self.test_cases)}] ⏱️  TIMEOUT: {error_msg}")
             except Exception as e:
                 error_msg = str(e)[:100]
                 results["errors"].append({
@@ -309,7 +309,7 @@ class ComprehensiveModelComparator:
                     "query": query[:80],
                     "error": error_msg
                 })
-                print(f"   [{i:2d}/20] 💥 EXCEPTION: {error_msg}")
+                print(f"   [{i:2d}/{len(self.test_cases)}] 💥 EXCEPTION: {error_msg}")
         
         # Calculate averages - avec sécurité
         if tool_selection_accuracies and len(tool_selection_accuracies) > 0:
@@ -376,7 +376,7 @@ class ComprehensiveModelComparator:
         else:
             print(f"  ✅ NO ERRORS")
             
-        print(f"  📝 Total Queries Tested: {len(results['test_details'])}/20")
+        print(f"  📝 Total Queries Tested: {len(results['test_details'])}/{len(self.test_cases)}")
         print(f"{'='*90}\n")
         
         return results
@@ -422,7 +422,7 @@ class ComprehensiveModelComparator:
             else:
                 latency = "N/A"
             
-            tests = f"{len(result['test_details'])}/20"
+            tests = f"{len(result['test_details'])}/{len(self.test_cases)}"
             
             # Add star for best performer
             star = "⭐ " if rank == 1 else ""
@@ -449,11 +449,11 @@ class ComprehensiveModelComparator:
         if len(combined_scores) > 1:
             print(f"   Std Dev: {statistics.stdev(combined_scores)*100:.1f}%")
     
-    def save_results(self, results: List[Dict], output_file: str = None) -> str:
+    def save_results(self, results: List[Dict], output_file: str = None,queryfile:str = "") -> str:
         """Save results to JSON."""
         if output_file is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = f"Param_and_cli/results/model_comparison_results_{timestamp}.json"
+            output_file = f"Param_and_cli/results/results_{queryfile}_new.json"
         
         with open(output_file, "w") as f:
             json.dump(results, f, indent=2)
@@ -461,7 +461,7 @@ class ComprehensiveModelComparator:
         print(f"\n✅ Results saved to: {output_file}")
         return output_file
 
-def main():
+def main(query_file):
     print("\n" + "="*110)
     print("🚀 COMPREHENSIVE MODEL PERFORMANCE COMPARISON")
     print("Testing all LLM models on tool selection + parameter extraction")
@@ -470,7 +470,7 @@ def main():
     # Initialize comparator
     comparator = ComprehensiveModelComparator(
         "manifest.yaml",
-        "Param_and_cli/queries/benchmark_queries_with_params_corrected.json"
+        f"Param_and_cli/queries/{query_file}.json"
     )
     
     # Get available models
@@ -487,7 +487,6 @@ def main():
         print(f"   • {model}")
     
     # Run comparison
-    print(f"\n🔄 Running comparison on 20 benchmark cases...")
     results = comparator.run_comparison(available_models)
     
     # Print summary
@@ -495,7 +494,7 @@ def main():
         comparator.print_summary(results)
         
         # Save results
-        output_file = comparator.save_results(results)
+        output_file = comparator.save_results(results,queryfile=query_file)
         
         print(f"\n✨ COMPARISON COMPLETE\n")
     else:
@@ -503,4 +502,4 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1])

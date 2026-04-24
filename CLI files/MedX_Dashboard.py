@@ -20,7 +20,6 @@ if __name__ == "__main__":
 
     parser.add_argument("summary_folder", type=str)
     parser.add_argument("output_folder", type=str)
-    parser.add_argument("log_path", type=str)
 
     args = parser.parse_args()
 

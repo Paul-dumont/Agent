@@ -170,7 +170,7 @@ def apply_transform_to_landmarks(scan_path, transform, output_path):
         json.dump(lm_data, f, indent=2)
         
 
-def apply_transform_to_image(image, transform, reference, output_path, scan_path, is_seg=False):
+def cheapply_transform_to_image(image, transform, reference, output_path, scan_path, is_seg=False):
     if isinstance(transform, sitk.CompositeTransform):
         ref_guess_gz = scan_path.replace("_transform.tfm", ".nii.gz")
         ref_guess_nii = scan_path.replace("_transform.tfm", ".nii")
@@ -269,8 +269,8 @@ def main(args):
                     print(f"ERROR reading transform {matrix}: {e}")
                     continue
 
-                matrix_suffix = f"_{Path(matrix).stem}" if args.matrix_name == "True" else ""
-                out_suffix = f"{args.suffix}{matrix_suffix}"
+                matrix_suffix = f"_{Path(matrix).stem}"
+                out_suffix = f"_apply_{matrix_suffix}"
                 
                 # For landmarks
                 if is_landmark:
@@ -287,7 +287,7 @@ def main(args):
                         local_reference = reference_image if reference_image is not None else image
                     
                     out_file = outpath.split(extension_scan)[0] + out_suffix + extension_scan
-                    apply_transform_to_image(image, tfm, local_reference, out_file, matrix, is_seg=is_seg)
+                    cheapply_transform_to_image(image, tfm, local_reference, out_file, matrix, is_seg=is_seg)
                 except Exception as e:
                     print(f"ERROR processing {scan} with matrix {matrix}: {e}")
                     continue
@@ -313,8 +313,6 @@ if __name__ == "__main__":
     parser.add_argument("input_patient", type=str)
     parser.add_argument("input_matrix", type=str)
     parser.add_argument("reference_file", type=str)
-    parser.add_argument("suffix", type=str)
-    parser.add_argument("matrix_name", type=str)
     parser.add_argument("fromAreg", type=str)
     parser.add_argument("output_folder", type=str)
     parser.add_argument("log_path", type=str)

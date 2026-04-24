@@ -26,24 +26,19 @@ def main(args):
         t2_folder,
         output_dir,
         reg_type,
-        add_name,
-        SegLabel,
         temp_folder,
-        Approx,
         mask_folder_t1,
     ) = (
         args.t1_folder[0],
         args.t2_folder[0],
         args.output_folder[0],
         args.reg_type[0],
-        args.add_name[0],
-        int(args.SegmentationLabel[0]),
         args.temp_folder[0],
-        True if args.ApproxReg[0] == "true" else False,
         None if args.mask_folder_t1[0] == "None" else args.mask_folder_t1[0],
     )
-    if SegLabel == 0:
-        SegLabel = None
+
+    reg_type = "MAX" if "max" in reg_type else "CB"
+    reg_type = "MAND" if "mand" in reg_type else "CB"
 
     if args.DCMInput[0] == "true":
         convertdicom2nifti(t1_folder)
@@ -60,8 +55,8 @@ def main(args):
         print("Working on patient: ", patient)
         outpath = os.path.join(output_dir, translate(reg_type), patient + "_OutReg")
         ScanOutPath, TransOutPath = os.path.join(
-            outpath, patient + "_" + reg_type + "Scan" + add_name + ".nii.gz"
-        ), os.path.join(outpath, patient + "_" + reg_type + add_name + "_matrix.tfm")
+            outpath, patient + "_" + reg_type + "Scan_Reg.nii.gz"
+        ), os.path.join(outpath, patient + "_" + reg_type +"_Reg_matrix.tfm")
 
         folder_name = os.path.basename(ScanOutPath)
         if not os.path.exists(folder_name):
@@ -72,8 +67,7 @@ def main(args):
             moving_image_path=data["scanT2"],
             fixed_seg_path=data["segT1"],
             temp_folder=temp_folder,
-            approx=Approx,
-            SegLabel=SegLabel,
+            SegLabel=0,
         )
 
         if not os.path.exists(outpath):
@@ -101,11 +95,8 @@ if __name__ == "__main__":
     parser.add_argument("t2_folder", nargs=1)
     parser.add_argument("reg_type", nargs=1)
     parser.add_argument("output_folder", nargs=1)
-    parser.add_argument("add_name", nargs=1)
     parser.add_argument("DCMInput", nargs=1)
-    parser.add_argument("SegmentationLabel", nargs=1)
     parser.add_argument("temp_folder", nargs=1)
-    parser.add_argument("ApproxReg", nargs=1)
     parser.add_argument("mask_folder_t1", nargs=1)
 
     args = parser.parse_args()

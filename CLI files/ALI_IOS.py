@@ -140,7 +140,7 @@ def main(args):
                 for label in lst_teeth:
                     print("Loading model :", model, "for patient :", patient_id, "label :", label)
                     phong_renderer, mask_renderer = GenPhongRenderer(
-                        int(args.image_size), int(args.blur_radius), int(args.faces_per_pixel), DEVICE
+                        224, 0, 1, DEVICE
                     )
 
                     agent = Agent(
@@ -252,9 +252,6 @@ if __name__ == "__main__":
     parser.add_argument("lm_type", type=str)
     parser.add_argument("teeth", type=str)
     parser.add_argument("output_dir", type=str)
-    parser.add_argument("image_size", default="224",type=str)
-    parser.add_argument("blur_radius", default="0",type=str)
-    parser.add_argument("faces_per_pixel", default="1",type=str)
     parser.add_argument("log_path", type=str)
 
     args = parser.parse_args()

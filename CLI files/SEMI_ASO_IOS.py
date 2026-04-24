@@ -93,11 +93,6 @@ def main(args):
             output_icp = icp[jaw()].run(file_jaw["json"], dic_gold[jaw()])
         except KeyError as k:
             print("error  KeyError", k, file_jaw)
-            WritefileError(
-                file_jaw["json"],
-                args.folder_error[0],
-                f'Please verify this file {file_jaw["json"]} or {dic_gold[jaw()]}, we dont find this landmark {k} ',
-            )
             with open(args.log_path[0], "r+") as log_f:
                 log_f.write(str(index))
             continue
@@ -109,11 +104,11 @@ def main(args):
             output_icp["source_Or"],
             file_jaw["json"],
             file_jaw["json"],
-            args.add_inname[0],
+            "Or",
             args.output_folder[0],
         )
         WriteSurf(
-            surf_output, args.output_folder[0], file_jaw["vtk"], args.add_inname[0]
+            surf_output, args.output_folder[0], file_jaw["vtk"], "Or"
         )
         np.save(
             os.path.join(args.output_folder[0], f'matrix_{file["name"]}.npy'),
@@ -127,7 +122,7 @@ def main(args):
                 surf_output,
                 args.output_folder[0],
                 file[jaw.inv()]["vtk"],
-                args.add_inname[0],
+                "Or",
             )
 
             if not file[jaw.inv()]["json"] is None:
@@ -138,7 +133,7 @@ def main(args):
                     json_output,
                     file[jaw.inv()]["json"],
                     file[jaw.inv()]["json"],
-                    args.add_inname[0],
+                    "Or",
                     args.output_folder[0],
                 )
 
@@ -156,11 +151,9 @@ if __name__ == "__main__":
     parser.add_argument("input", nargs=1)
     parser.add_argument("gold_folder", nargs=1)
     parser.add_argument("output_folder", nargs=1)
-    parser.add_argument("add_inname", nargs=1)
     parser.add_argument("list_landmark", nargs=1)
     parser.add_argument("occlusion", nargs=1)
     parser.add_argument("jaw", nargs=1)
-    parser.add_argument("folder_error", nargs=1)
     parser.add_argument("log_path", nargs=1)
 
     args = parser.parse_args()

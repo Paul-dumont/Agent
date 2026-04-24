@@ -160,12 +160,6 @@ def main(args):
         except ToothNoExist as tne:
             print(f"Error {tne}, for this file {file_vtk}")
 
-            WritefileError(
-                file_vtk,
-                args.folder_error[0],
-                f"Error {str(tne)}, for this file {file_vtk}",
-            )
-
             with open(args.log_path[0], "r+") as log_f:
                 log_f.write(str(index))
             continue
@@ -173,12 +167,6 @@ def main(args):
         except NoSegmentationSurf as nss:
 
             print(f"Error {nss}, for this file {file_vtk}")
-
-            WritefileError(
-                file_vtk,
-                args.folder_error[0],
-                f"Error {str(nss)}, for this file {file_vtk}",
-            )
 
             with open(args.log_path[0], "r+") as log_f:
                 log_f.write(str(index))
@@ -188,7 +176,7 @@ def main(args):
             output_icp["source_Or"],
             args.output_folder[0],
             os.path.basename(file_vtk),
-            args.add_inname[0],
+            "Or"
         )
 
         if link:
@@ -200,7 +188,7 @@ def main(args):
                 output_lower,
                 args.output_folder[0],
                 os.path.basename(file[jaw.inv()]),
-                args.add_inname[0],
+                "Or"
             )
 
         with open(args.log_path[0], "w+") as log_f:
@@ -217,11 +205,9 @@ if __name__ == "__main__":
     parser.add_argument("input", nargs=1)
     parser.add_argument("gold_folder", nargs=1)
     parser.add_argument("output_folder", nargs=1)
-    parser.add_argument("add_inname", nargs=1)
     parser.add_argument("list_teeth", nargs=1)
     parser.add_argument("occlusion", nargs=1)
     parser.add_argument("jaw", nargs=1)
-    parser.add_argument("folder_error", nargs=1)
     parser.add_argument("log_path", nargs=1)
 
     args = parser.parse_args()
