@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Dict, Any, Tuple, List, Optional
 
 # ----- CONFIG -----
-MODEL = os.environ.get("ROUTER_MODEL", "mistral:latest")
+MODEL = os.environ.get("ROUTER_MODEL", "qwen3:8b")
 BACKEND = os.environ.get("ROUTER_BACKEND", "ollama")
 CONF_THRESHOLD = float(os.environ.get("ROUTER_THRESHOLD", "0.40"))
 PARAM_CONF_THRESHOLD = float(os.environ.get("PARAM_CONF_THRESHOLD", "0.35"))

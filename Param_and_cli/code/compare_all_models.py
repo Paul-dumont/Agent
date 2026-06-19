@@ -453,7 +453,7 @@ class ComprehensiveModelComparator:
         """Save results to JSON."""
         if output_file is None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-            output_file = f"Param_and_cli/results/results_{queryfile}_new.json"
+            output_file = f"Param_and_cli/results/results_qwen3-8b_{queryfile}_new.json"
         
         with open(output_file, "w") as f:
             json.dump(results, f, indent=2)
@@ -474,8 +474,11 @@ def main(query_file):
     )
     
     # Get available models
-    print("📊 Getting available models from Ollama...")
-    available_models = comparator.get_available_models()
+    print("📊 Setting model to ...")
+    available_models = ["qwen3:8b"]
+    print("📊 Setting model to ...")
+    print(available_models)
+
     
     if not available_models:
         print("❌ No models available! Please ensure Ollama is running and has models installed.")

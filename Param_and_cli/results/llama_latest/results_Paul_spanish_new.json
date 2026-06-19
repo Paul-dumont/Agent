@@ -1,0 +1,279 @@
+[
+  {
+    "model": "llama3:latest",
+    "timestamp": "2026-06-01 09:37:42",
+    "total_tests": 23,
+    "tool_selection_correct": 20,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 8,
+    "parameter_extraction_total": 20,
+    "combined_perfect": 8,
+    "avg_tool_selection_accuracy": 0.8695652173913043,
+    "avg_parameter_accuracy": 0.6860248447204969,
+    "avg_combined_accuracy": 0.6860248447204969,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Detecta los puntos de referencia anat\u00f3micos en los vol\u00famenes CBCT en /data/scans",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.8333333333333334,
+        "is_perfect": false,
+        "latency": 2.06620454788208
+      },
+      {
+        "index": 2,
+        "query": "Extrae los landmarks dentales para los dientes 8 y 9 en el escaneo /data/ios_sca",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 1.968916654586792
+      },
+      {
+        "index": 3,
+        "query": "Realiza una segmentaci\u00f3n autom\u00e1tica de la mand\u00edbula y el maxilar en los escaneos",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 1.8317503929138184
+      },
+      {
+        "index": 4,
+        "query": "Alinea los escaneos iniciales (T1) de /data/T1 con los de seguimiento (T2) en /d",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_ios",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.8402149677276611
+      },
+      {
+        "index": 5,
+        "query": "Lleva a cabo el registro de superficies dentales entre /scans/T1 y /scans/T2. Ut",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8333333333333334,
+        "is_perfect": false,
+        "latency": 1.853532075881958
+      },
+      {
+        "index": 6,
+        "query": "Recorta las regiones de inter\u00e9s de los vol\u00famenes en /data/raw usando el archivo ",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 1.7191197872161865
+      },
+      {
+        "index": 7,
+        "query": "Aplica las matrices de transformaci\u00f3n de /data/matrices al escaneo /data/patient",
+        "expected_tool": "automatrix",
+        "selected_tool": "areg_cbct",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 2.1284985542297363
+      },
+      {
+        "index": 8,
+        "query": "Ejecuta una segmentaci\u00f3n dental por lotes en la carpeta /data/cbct_scans. Usa lo",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.7638866901397705
+      },
+      {
+        "index": 9,
+        "query": "Usa la herramienta CLIC para segmentar las estructuras dentales en /data/patient",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.4587914943695068
+      },
+      {
+        "index": 10,
+        "query": "Analiza la morfolog\u00eda de las mallas en /data/meshes. Realiza una clasificaci\u00f3n d",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 2.197141408920288
+      },
+      {
+        "index": 11,
+        "query": "Realiza un registro flexible (deformable) en la superficie /data/tooth.vtk. Usa ",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.5279991626739502
+      },
+      {
+        "index": 12,
+        "query": "Genera un panel interactivo (dashboard) a partir de los res\u00famenes cl\u00ednicos en /d",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.3414618968963623
+      },
+      {
+        "index": 13,
+        "query": "Produce una s\u00edntesis de las notas m\u00e9dicas en /data/notes con el modelo t5-base. ",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.7164320945739746
+      },
+      {
+        "index": 14,
+        "query": "Realiza una aproximaci\u00f3n de imagen RM a CBCT para los archivos en /data/mri usan",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.5191035270690918
+      },
+      {
+        "index": 15,
+        "query": "Alinea las secuencias RM de /data/mri con los vol\u00famenes CBCT de /data/cbct. Usa ",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.859511137008667
+      },
+      {
+        "index": 16,
+        "query": "Separa los lados izquierdo y derecho de los escaneos para an\u00e1lisis de asimetr\u00eda.",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 1.7661008834838867
+      },
+      {
+        "index": 17,
+        "query": "Reorienta y centra las RM brutas en /data/mri_raw. Usa la direcci\u00f3n est\u00e1ndar [-1",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 1.8128840923309326
+      },
+      {
+        "index": 18,
+        "query": "Remuestrea todos los vol\u00famenes en la carpeta /data/raw a un tama\u00f1o de [256, 256,",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.2,
+        "is_perfect": false,
+        "latency": 1.721088171005249
+      },
+      {
+        "index": 19,
+        "query": "Extrae las regiones de la articulaci\u00f3n temporomandibular (ATM) de los escaneos C",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 1.9001963138580322
+      },
+      {
+        "index": 20,
+        "query": "Prepara los escaneos CBCT en /data/raw para la orientaci\u00f3n ASO. Usa el modelo en",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 1.652494192123413
+      },
+      {
+        "index": 21,
+        "query": "Estandariza la orientaci\u00f3n de los escaneos intraorales de /data/ios respecto a l",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.7142857142857143,
+        "is_perfect": false,
+        "latency": 2.02524733543396
+      },
+      {
+        "index": 22,
+        "query": "Reorienta los escaneos CBCT en /data/scans usando los puntos Sella y Nasion. Usa",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 1.479499101638794
+      },
+      {
+        "index": 23,
+        "query": "Ajusta la orientaci\u00f3n de las superficies IOS en /data/ios mediante los landmarks",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.7142857142857143,
+        "is_perfect": false,
+        "latency": 1.9986062049865723
+      }
+    ],
+    "latencies": [
+      2.06620454788208,
+      1.968916654586792,
+      1.8317503929138184,
+      1.8402149677276611,
+      1.853532075881958,
+      1.7191197872161865,
+      2.1284985542297363,
+      1.7638866901397705,
+      1.4587914943695068,
+      2.197141408920288,
+      1.5279991626739502,
+      1.3414618968963623,
+      1.7164320945739746,
+      1.5191035270690918,
+      1.859511137008667,
+      1.7661008834838867,
+      1.8128840923309326,
+      1.721088171005249,
+      1.9001963138580322,
+      1.652494192123413,
+      2.02524733543396,
+      1.479499101638794,
+      1.9986062049865723
+    ],
+    "errors": [],
+    "latency_stats": {
+      "mean_s": 1.7890730733456819,
+      "median_s": 1.8128840923309326,
+      "min_s": 1.3414618968963623,
+      "max_s": 2.197141408920288
+    }
+  }
+]

@@ -8,7 +8,7 @@ def main():
     
     for query in list_json:
         try:
-            with open(f"Param_and_cli/results/results_{query}.json", "r") as f:
+            with open(f"Param_and_cli/results/results_qwen3-8b_{query}_new.json", "r") as f:
                 model_results = json.load(f)
             
             for result in model_results:
@@ -56,8 +56,22 @@ def main():
         # 2. Ajouter la ligne vide séparatrice
         # On utilise une chaîne avec un espace " " pour l'index pour qu'il soit distinct
         empty_index = pd.MultiIndex.from_tuples([(f" ", " ")], names=["json_file", "metric"])
-        empty_row = pd.DataFrame(index=empty_index, columns=df.columns)
+        empty_row = pd.DataFrame("", index=empty_index, columns=df.columns)
         final_rows.append(empty_row)
+
+    # 3. Calcul du bloc TOTAL
+    total_data = {}
+    metrics_to_sum = ["total_tests", "combined_perfect", "param_extraction_perfect"]
+    for metric in df.index.get_level_values(1).unique():
+        sub_df = df.xs(metric, level="metric")
+        if metric in metrics_to_sum:
+            total_data[("TOTAL", metric)] = sub_df.sum()
+        else:
+            total_data[("TOTAL", metric)] = sub_df.mean().round(3)
+            
+    df_total = pd.DataFrame.from_dict(total_data, orient='index')
+    df_total.index.names = ["json_file", "metric"]
+    final_rows.append(df_total)
 
     # Concaténation finale
     df_final = pd.concat(final_rows)
@@ -65,7 +79,7 @@ def main():
     # Affichage
     print(df_final)
     # Pour sauvegarder en Excel/CSV plus facilement :
-    df_final.to_excel("resultats_full medgemma.xlsx")
+    df_final.to_excel("resultats_full_qwen.xlsx")
     return df
 
 if __name__ == "__main__":

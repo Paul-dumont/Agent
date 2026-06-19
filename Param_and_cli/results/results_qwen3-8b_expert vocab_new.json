@@ -1,0 +1,279 @@
+[
+  {
+    "model": "qwen3:8b",
+    "timestamp": "2026-06-08 10:15:43",
+    "total_tests": 23,
+    "tool_selection_correct": 23,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 12,
+    "parameter_extraction_total": 23,
+    "combined_perfect": 12,
+    "avg_tool_selection_accuracy": 1.0,
+    "avg_parameter_accuracy": 0.8755175983436854,
+    "avg_combined_accuracy": 0.8755175983436854,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Execute automated cephalometric landmark identification on high-resolution CBCT ",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.8333333333333334,
+        "is_perfect": false,
+        "latency": 12.25679326057434
+      },
+      {
+        "index": 2,
+        "query": "Perform precise odontometric landmark extraction on the intraoral surface mesh a",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 8.917286157608032
+      },
+      {
+        "index": 3,
+        "query": "Initiate deep-learning-based anatomical segmentation on the CBCT cohort in /rese",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 18.771603107452393
+      },
+      {
+        "index": 4,
+        "query": "Execute voxel-based rigid registration of longitudinal CBCT datasets. Baseline (",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 17.810073852539062
+      },
+      {
+        "index": 5,
+        "query": "Implement surface-to-surface ICP registration for sequential intraoral scans sto",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8333333333333334,
+        "is_perfect": false,
+        "latency": 10.495600938796997
+      },
+      {
+        "index": 6,
+        "query": "Perform automated spatial cropping of volumetric scans in /archive/full_volumes ",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 23.619527101516724
+      },
+      {
+        "index": 7,
+        "query": "Apply composite rigid transformation matrices from /transformations/matrices to ",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 0.7142857142857143,
+        "is_perfect": false,
+        "latency": 12.80026888847351
+      },
+      {
+        "index": 8,
+        "query": "Deploy the nnUNet-based dental segmentation pipeline on the CBCT repository at /",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.225241661071777
+      },
+      {
+        "index": 9,
+        "query": "Execute instance segmentation using the Mask R-CNN architecture on CBCT scans wi",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.304124355316162
+      },
+      {
+        "index": 10,
+        "query": "Conduct morphometric shape analysis and classification on the surface mesh libra",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 0.875,
+        "is_perfect": false,
+        "latency": 16.603087902069092
+      },
+      {
+        "index": 11,
+        "query": "Perform flexible patch-based deformable registration on the dental surface file ",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.610090732574463
+      },
+      {
+        "index": 12,
+        "query": "Synthesize an interactive analytical dashboard from the clinical summary data in",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 5.903232097625732
+      },
+      {
+        "index": 13,
+        "query": "Perform transformer-based NLP summarization on the corpus of clinical narratives",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.027941226959229
+      },
+      {
+        "index": 14,
+        "query": "Execute multimodal intensity normalization and spatial domain approximation of M",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.329480171203613
+      },
+      {
+        "index": 15,
+        "query": "Implement multimodal deformable registration to align the MRI cohort in /data/mr",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 11.159013748168945
+      },
+      {
+        "index": 16,
+        "query": "Perform bilateral hemimandibular ROI extraction for morphometric asymmetry asses",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.09765887260437
+      },
+      {
+        "index": 17,
+        "query": "Standardize the anatomical orientation and spatial centering of the MRI volumes ",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 14.10051417350769
+      },
+      {
+        "index": 18,
+        "query": "Perform isotropic voxel resampling and grid interpolation of the multimodal data",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.2,
+        "is_perfect": false,
+        "latency": 17.3272225856781
+      },
+      {
+        "index": 19,
+        "query": "Execute automated nnUNet-based segmentation and spatial cropping of the Temporom",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.677576303482056
+      },
+      {
+        "index": 20,
+        "query": "Implement standardized orientation normalization for Automatic Segmentation Orie",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.189787149429321
+      },
+      {
+        "index": 21,
+        "query": "Standardize intraoral surface orientation for ASO using reference templates from",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8571428571428571,
+        "is_perfect": false,
+        "latency": 9.046881675720215
+      },
+      {
+        "index": 22,
+        "query": "Perform semi-automatic CBCT orientation using landmark-guided ICP registration. ",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 9.054945945739746
+      },
+      {
+        "index": 23,
+        "query": "Implement semi-automatic dental mesh orientation using point-based ICP. Source: ",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8571428571428571,
+        "is_perfect": false,
+        "latency": 10.083359003067017
+      }
+    ],
+    "latencies": [
+      12.25679326057434,
+      8.917286157608032,
+      18.771603107452393,
+      17.810073852539062,
+      10.495600938796997,
+      23.619527101516724,
+      12.80026888847351,
+      9.225241661071777,
+      6.304124355316162,
+      16.603087902069092,
+      6.610090732574463,
+      5.903232097625732,
+      8.027941226959229,
+      8.329480171203613,
+      11.159013748168945,
+      8.09765887260437,
+      14.10051417350769,
+      17.3272225856781,
+      8.677576303482056,
+      8.189787149429321,
+      9.046881675720215,
+      9.054945945739746,
+      10.083359003067017
+    ],
+    "errors": [],
+    "latency_stats": {
+      "mean_s": 11.365709170051243,
+      "median_s": 9.225241661071777,
+      "min_s": 5.903232097625732,
+      "max_s": 23.619527101516724
+    }
+  }
+]

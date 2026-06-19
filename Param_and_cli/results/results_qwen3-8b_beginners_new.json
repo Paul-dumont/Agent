@@ -1,0 +1,527 @@
+[
+  {
+    "model": "qwen3:8b",
+    "timestamp": "2026-06-08 10:45:05",
+    "total_tests": 46,
+    "tool_selection_correct": 42,
+    "tool_selection_total": 45,
+    "parameter_extraction_perfect": 22,
+    "parameter_extraction_total": 42,
+    "combined_perfect": 22,
+    "avg_tool_selection_accuracy": 0.9333333333333333,
+    "avg_parameter_accuracy": 0.7984391534391534,
+    "avg_combined_accuracy": 0.7984391534391534,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "Can you find the dots on the bone scans in /data/scans? Use the models in /model",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.8333333333333334,
+        "is_perfect": false,
+        "latency": 17.01236867904663
+      },
+      {
+        "index": 2,
+        "query": "I need to mark teeth 8 and 9 on the picture at /data/tooth.stl. Use the /models/",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 13.667370319366455
+      },
+      {
+        "index": 3,
+        "query": "Please color in the top and bottom jaw from the scans in /data/cbct. Use the AI ",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 14.747966289520264
+      },
+      {
+        "index": 4,
+        "query": "Can you line up the old scans in /data/T1 with the new ones in /data/T2 for the ",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.8333333333333334,
+        "is_perfect": false,
+        "latency": 21.0547034740448
+      },
+      {
+        "index": 5,
+        "query": "Match the first mouth scan in /data/pre with the second one in /data/post. Use t",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_cbct",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 12.379230737686157
+      },
+      {
+        "index": 6,
+        "query": "Cut out the small boxes from the big scans in /data/scans using the marker file ",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 8.486140251159668
+      },
+      {
+        "index": 7,
+        "query": "Move the scan /data/patient.nii using the directions in /data/tfm. Use /data/ref",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 0.7142857142857143,
+        "is_perfect": false,
+        "latency": 12.607412815093994
+      },
+      {
+        "index": 8,
+        "query": "Find the teeth in all the files in /data/scans at once. Use the models in /model",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.9920713901519775
+      },
+      {
+        "index": 9,
+        "query": "Use the CLIC tool to find teeth in the scans at /data/patients. Use the model fo",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.282409906387329
+      },
+      {
+        "index": 10,
+        "query": "Check the tooth shapes in /data/meshes. Use the classification mode with 3 group",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 0.625,
+        "is_perfect": false,
+        "latency": 12.467603921890259
+      },
+      {
+        "index": 11,
+        "query": "Warp the tooth shape at /data/tooth.stl. Use the butterfly way and save the new ",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.53997540473938
+      },
+      {
+        "index": 12,
+        "query": "Make a simple webpage to look at the results in /data/summaries. Save the files ",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 5.315832853317261
+      },
+      {
+        "index": 13,
+        "query": "Read the patient notes in /data/notes and give me a short summary. Use the t5-ba",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.734943866729736
+      },
+      {
+        "index": 14,
+        "query": "Make the MRI scans in /data/mri look like the CBCT scans in /data/cbct. Save the",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.974195718765259
+      },
+      {
+        "index": 15,
+        "query": "Line up the MRI folder /data/mri with the CBCT folder /data/cbct. Use the masks ",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 10.118270874023438
+      },
+      {
+        "index": 16,
+        "query": "Cut the scans into left and right sides. Use CBCT /data/cbct, MRI /data/mri, and",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.95493483543396
+      },
+      {
+        "index": 17,
+        "query": "Straighten the MRI scans in /data/mri_raw. Use direction -1,0,0,0,-1,0,0,0,1 and",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 8.041095733642578
+      },
+      {
+        "index": 18,
+        "query": "Change the resolution of all my scans in /data/raw to size [256, 256, 128]. Save",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.2,
+        "is_perfect": false,
+        "latency": 14.565341472625732
+      },
+      {
+        "index": 19,
+        "query": "Cut out the jaw joints from the scans in /data/cbct and /data/mri. Use /data/seg",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.798639297485352
+      },
+      {
+        "index": 20,
+        "query": "Clean up the scans in /data/raw for ASO. Use the model in /models/aso, save to /",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 14.666384935379028
+      },
+      {
+        "index": 21,
+        "query": "Turn the mouth scans in /data/ios the right way using /data/gold. Do teeth 8 and",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.7142857142857143,
+        "is_perfect": false,
+        "latency": 11.126061916351318
+      },
+      {
+        "index": 22,
+        "query": "Fix the angle of the scans in /data/scans using the landmarks Sella and Nasion. ",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 8.631851196289062
+      },
+      {
+        "index": 23,
+        "query": "Turn the mouth shapes in /data/ios using landmarks Cusp and Fossa. Use the top j",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.7142857142857143,
+        "is_perfect": false,
+        "latency": 15.183169841766357
+      },
+      {
+        "index": 24,
+        "query": "Can you find the landmark points on the patient scans in /data/scans? Use the mo",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.8333333333333334,
+        "is_perfect": false,
+        "latency": 18.259535551071167
+      },
+      {
+        "index": 25,
+        "query": "I need to find landmarks for teeth 8 and 9 on the scan file /data/teeth.stl. Use",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.6666666666666666,
+        "is_perfect": false,
+        "latency": 8.280755043029785
+      },
+      {
+        "index": 26,
+        "query": "Please segment the Mandible and Maxilla from the scans in /data/cbct_scans. Use ",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.170475959777832
+      },
+      {
+        "index": 27,
+        "query": "Help me align my first scans in /data/T1 with the second scans in /data/T2 using",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 15.31042218208313
+      },
+      {
+        "index": 28,
+        "query": "Can you register the dental scans in /data/pre to the ones in /data/post? Use th",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_cbct",
+        "tool_correct": false,
+        "param_accuracy": 0.0,
+        "is_perfect": false,
+        "latency": 22.92561411857605
+      },
+      {
+        "index": 29,
+        "query": "I want to crop my scans in /data/volumes using the marker file /data/markers.jso",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.894426107406616
+      },
+      {
+        "index": 30,
+        "query": "Apply the movement matrices in /data/tfm to the scan /data/patient.nii. Use /dat",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 0.7142857142857143,
+        "is_perfect": false,
+        "latency": 10.601540803909302
+      },
+      {
+        "index": 31,
+        "query": "Please run a batch tooth segmentation on the folder /data/scans. Use the models ",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.247545719146729
+      },
+      {
+        "index": 32,
+        "query": "Run the CLIC segmentation on the scans in /data/patients. Use the Mask-RCNN mode",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.090683221817017
+      },
+      {
+        "index": 34,
+        "query": "Do a flexible registration for the tooth mesh at /data/tooth.vtk. Use the butter",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.37812352180481
+      },
+      {
+        "index": 35,
+        "query": "Make a web dashboard to show the results in /data/results. Save the HTML dashboa",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.138976812362671
+      },
+      {
+        "index": 36,
+        "query": "Summarize the patient notes in /data/notes using the t5-base model. Put the summ",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.768581867218018
+      },
+      {
+        "index": 37,
+        "query": "Approximate the MRI scans in /data/mri using the CBCT scans in /data/cbct. Put t",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.447389602661133
+      },
+      {
+        "index": 38,
+        "query": "Register my MRI folder /data/mri to the CBCT folder /data/cbct. Use the masks in",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 13.599897623062134
+      },
+      {
+        "index": 39,
+        "query": "Crop the left and right sides of the scans. CBCT: /data/cbct, MRI: /data/mri, Se",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.8087592124938965
+      },
+      {
+        "index": 40,
+        "query": "Standardize the MRI scans in /data/mri_raw. Set the direction to -1,0,0,0,-1,0,0",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 7.822311639785767
+      },
+      {
+        "index": 41,
+        "query": "Resample all my images in /data/raw to size [256, 256, 128]. Use /data/resampled",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 0.1,
+        "is_perfect": false,
+        "latency": 11.124017715454102
+      },
+      {
+        "index": 42,
+        "query": "Find and crop the TMJ regions from the scans in /data/cbct and /data/mri. Use th",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 11.1246337890625
+      },
+      {
+        "index": 43,
+        "query": "Prepare the CBCT scans in /data/raw for ASO. Use the model in /models/aso, save ",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 15.430997371673584
+      },
+      {
+        "index": 44,
+        "query": "Orient my dental scans in /data/ios for ASO using the gold standard in /data/gol",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8571428571428571,
+        "is_perfect": false,
+        "latency": 8.288866758346558
+      },
+      {
+        "index": 45,
+        "query": "Fix the orientation of my CBCT scans in /data/scans using the gold standard in /",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 9.575450897216797
+      },
+      {
+        "index": 46,
+        "query": "Orient my dental meshes in /data/ios using the gold folder /data/gold. Use landm",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8571428571428571,
+        "is_perfect": false,
+        "latency": 7.861743688583374
+      }
+    ],
+    "latencies": [
+      17.01236867904663,
+      13.667370319366455,
+      14.747966289520264,
+      21.0547034740448,
+      12.379230737686157,
+      8.486140251159668,
+      12.607412815093994,
+      6.9920713901519775,
+      6.282409906387329,
+      12.467603921890259,
+      6.53997540473938,
+      5.315832853317261,
+      8.734943866729736,
+      6.974195718765259,
+      10.118270874023438,
+      7.95493483543396,
+      8.041095733642578,
+      14.565341472625732,
+      8.798639297485352,
+      14.666384935379028,
+      11.126061916351318,
+      8.631851196289062,
+      15.183169841766357,
+      18.259535551071167,
+      8.280755043029785,
+      9.170475959777832,
+      15.31042218208313,
+      22.92561411857605,
+      9.894426107406616,
+      10.601540803909302,
+      8.247545719146729,
+      6.090683221817017,
+      7.37812352180481,
+      8.138976812362671,
+      7.768581867218018,
+      6.447389602661133,
+      13.599897623062134,
+      6.8087592124938965,
+      7.822311639785767,
+      11.124017715454102,
+      11.1246337890625,
+      15.430997371673584,
+      8.288866758346558,
+      9.575450897216797,
+      7.861743688583374
+    ],
+    "errors": [
+      {
+        "test": 33,
+        "query": "Analyze the tooth shapes of the meshes in /data/stls using the classification ta",
+        "error": "Timeout (60s)"
+      }
+    ],
+    "latency_stats": {
+      "mean_s": 10.722193887498644,
+      "median_s": 9.170475959777832,
+      "min_s": 5.315832853317261,
+      "max_s": 22.92561411857605
+    }
+  }
+]

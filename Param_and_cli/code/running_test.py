@@ -4,7 +4,7 @@ import export_result
 import json
 
 def main():
-    list_json = ["french"]#,"expert vocab","missingparam","normal vocab","portuguese","spanish","beginners","short","long"]
+    list_json = ["french", "expert vocab", "missingparam", "normal vocab", "portuguese", "spanish", "beginners", "short", "long"]
     for query in list_json:
         compare_all_models.main(query)
     # export_result.main()

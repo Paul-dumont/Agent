@@ -1,0 +1,279 @@
+[
+  {
+    "model": "qwen3:8b",
+    "timestamp": "2026-06-08 10:59:12",
+    "total_tests": 23,
+    "tool_selection_correct": 23,
+    "tool_selection_total": 23,
+    "parameter_extraction_perfect": 15,
+    "parameter_extraction_total": 23,
+    "combined_perfect": 15,
+    "avg_tool_selection_accuracy": 1.0,
+    "avg_parameter_accuracy": 0.9391304347826087,
+    "avg_combined_accuracy": 0.9391304347826087,
+    "test_details": [
+      {
+        "index": 1,
+        "query": "I am currently reviewing a complex clinical case involving a patient with severe",
+        "expected_tool": "ali_cbct",
+        "selected_tool": "ali_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 16.74547028541565
+      },
+      {
+        "index": 2,
+        "query": "The orthodontics department has sent over several intraoral scans for a digital ",
+        "expected_tool": "ali_ios",
+        "selected_tool": "ali_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 8.707268714904785
+      },
+      {
+        "index": 3,
+        "query": "As part of our automated bone density study, we need to isolate the mandibular s",
+        "expected_tool": "amasss_cli",
+        "selected_tool": "amasss_cli",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.940879821777344
+      },
+      {
+        "index": 4,
+        "query": "We are conducting a longitudinal study on bone remodeling and need to compare th",
+        "expected_tool": "areg_cbct",
+        "selected_tool": "areg_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 12.147555112838745
+      },
+      {
+        "index": 5,
+        "query": "For the digital dental alignment project, we need to register the surface mesh o",
+        "expected_tool": "areg_ios",
+        "selected_tool": "areg_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.5,
+        "is_perfect": false,
+        "latency": 15.936288595199585
+      },
+      {
+        "index": 6,
+        "query": "The raw volumetric datasets in /storage/raw_cbct_dump are currently too large fo",
+        "expected_tool": "autocrop3d",
+        "selected_tool": "autocrop3d",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.248213768005371
+      },
+      {
+        "index": 7,
+        "query": "Following the previous registration step, we now have a set of transformation ma",
+        "expected_tool": "automatrix",
+        "selected_tool": "automatrix",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.230656623840332
+      },
+      {
+        "index": 8,
+        "query": "We have a large backlog of CBCT scans in the directory /radiology/archive/scans_",
+        "expected_tool": "batchdentalseg",
+        "selected_tool": "batchdentalseg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 8.133459091186523
+      },
+      {
+        "index": 9,
+        "query": "To improve our diagnostic workflow, we are implementing a new Mask-RCNN based se",
+        "expected_tool": "clic",
+        "selected_tool": "clic",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 5.978074312210083
+      },
+      {
+        "index": 10,
+        "query": "For our research into tooth morphology, we need to classify a large set of denta",
+        "expected_tool": "docshapeaxi",
+        "selected_tool": "docshapeaxi",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 28.560141563415527
+      },
+      {
+        "index": 11,
+        "query": "We are dealing with a highly deformed tooth structure that requires a non-rigid ",
+        "expected_tool": "flexreg",
+        "selected_tool": "flexreg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 6.429685592651367
+      },
+      {
+        "index": 12,
+        "query": "Now that we have completed the summarization of over five hundred patient record",
+        "expected_tool": "medx_dashboard",
+        "selected_tool": "medx_dashboard",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.139026880264282
+      },
+      {
+        "index": 13,
+        "query": "Our database contains thousands of free-text clinical notes in /clinical_notes/r",
+        "expected_tool": "medx_summarize",
+        "selected_tool": "medx_summarize",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.5018579959869385
+      },
+      {
+        "index": 14,
+        "query": "In this multimodal study, we are attempting to synthesize CBCT-like intensity va",
+        "expected_tool": "mri2cbct_approx",
+        "selected_tool": "mri2cbct_approx",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.607562780380249
+      },
+      {
+        "index": 15,
+        "query": "To improve our surgical planning, we need to align the soft tissue information f",
+        "expected_tool": "mri2cbct_reg",
+        "selected_tool": "mri2cbct_reg",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 14.254857301712036
+      },
+      {
+        "index": 16,
+        "query": "For our bilateral symmetry analysis of the temporomandibular joint, we need to s",
+        "expected_tool": "mri2cbct_lr_crop",
+        "selected_tool": "mri2cbct_lr_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 7.752189874649048
+      },
+      {
+        "index": 17,
+        "query": "The raw MRI scans we received from the outside imaging center are not in a stand",
+        "expected_tool": "mri2cbct_orient_center",
+        "selected_tool": "mri2cbct_orient_center",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": false,
+        "latency": 6.0095508098602295
+      },
+      {
+        "index": 18,
+        "query": "To standardize our dataset for deep learning training, all volumes must have the",
+        "expected_tool": "mri2cbct_resample",
+        "selected_tool": "mri2cbct_resample",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 11.256728410720825
+      },
+      {
+        "index": 19,
+        "query": "We are specifically investigating disorders of the temporomandibular joint (TMJ)",
+        "expected_tool": "mri2cbct_tmj_crop",
+        "selected_tool": "mri2cbct_tmj_crop",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 9.188236236572266
+      },
+      {
+        "index": 20,
+        "query": "Before we can perform the full ASO registration, we need to run the preprocessin",
+        "expected_tool": "pre_aso_cbct",
+        "selected_tool": "pre_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 1.0,
+        "is_perfect": true,
+        "latency": 10.56289291381836
+      },
+      {
+        "index": 21,
+        "query": "We need to standardize the orientation of several intraoral scans to a common co",
+        "expected_tool": "pre_aso_ios",
+        "selected_tool": "pre_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 7.554790019989014
+      },
+      {
+        "index": 22,
+        "query": "For our cephalometric analysis, we are using a semi-automated approach to orient",
+        "expected_tool": "semi_aso_cbct",
+        "selected_tool": "semi_aso_cbct",
+        "tool_correct": true,
+        "param_accuracy": 0.75,
+        "is_perfect": false,
+        "latency": 8.198104619979858
+      },
+      {
+        "index": 23,
+        "query": "The prosthetic lab requires the intraoral scans to be oriented based on specific",
+        "expected_tool": "semi_aso_ios",
+        "selected_tool": "semi_aso_ios",
+        "tool_correct": true,
+        "param_accuracy": 0.8,
+        "is_perfect": false,
+        "latency": 11.953582525253296
+      }
+    ],
+    "latencies": [
+      16.74547028541565,
+      8.707268714904785,
+      7.940879821777344,
+      12.147555112838745,
+      15.936288595199585,
+      7.248213768005371,
+      6.230656623840332,
+      8.133459091186523,
+      5.978074312210083,
+      28.560141563415527,
+      6.429685592651367,
+      7.139026880264282,
+      7.5018579959869385,
+      7.607562780380249,
+      14.254857301712036,
+      7.752189874649048,
+      6.0095508098602295,
+      11.256728410720825,
+      9.188236236572266,
+      10.56289291381836,
+      7.554790019989014,
+      8.198104619979858,
+      11.953582525253296
+    ],
+    "errors": [],
+    "latency_stats": {
+      "mean_s": 10.132046689157901,
+      "median_s": 8.133459091186523,
+      "min_s": 5.978074312210083,
+      "max_s": 28.560141563415527
+    }
+  }
+]
